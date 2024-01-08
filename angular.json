@@ -10,7 +10,20 @@
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
-          "style": "sass"
+          "style": "scss",
+          "skipTests": true
+        },
+        "@schematics/angular:class": {
+          "skipTests": true
+        },
+        "@schematics/angular:directive": {
+          "skipTests": true
+        },
+        "@schematics/angular:pipe": {
+          "skipTests": true
+        },
+        "@schematics/angular:service": {
+          "skipTests": true
         }
       },
       "root": "",
@@ -58,10 +71,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "jhon-trip:build:production"
+              "buildTarget": "jhons-trip:build:production"
             },
             "development": {
-              "buildTarget": "jhon-trip:build:development"
+              "buildTarget": "jhons-trip:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -69,7 +82,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "buildTarget": "jhon-trip:build"
+            "buildTarget": "jhons-trip:build"
           }
         },
         "test": {

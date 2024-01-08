@@ -1,0 +1,8 @@
+<ul *ngFor="let photos of photos">
+  <li>
+    <h3>
+      {{ photos.title }}
+    </h3>
+    <img src="{{ photos.url }}" alt="{{ photos.title }}" />
+  </li>
+</ul>
