@@ -13,15 +13,15 @@ import { JourneyComponent } from "../journey/journey.component"
 })
 export class JourneysComponent {
   constructor(private http: HttpClient) {}
-  journeys: Journey[] = []
+  journeys: Journey[] | undefined = undefined
 
   ngOnInit() {
     this.getJourneys().subscribe((data) => {
-      this.journeys = data
+      this.journeys = data.journeys
     })
   }
 
   getJourneys() {
-    return this.http.get<Journey[]>(`../assets/trips.json`)
+    return this.http.get<{ journeys: Journey[] }>(`../assets/data.json`)
   }
 }
