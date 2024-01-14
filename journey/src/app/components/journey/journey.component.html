@@ -9,5 +9,6 @@
     <span>{{ this.journey.start | date }}</span>
     <span>{{ this.journey.city | date }}</span>
   </div>
+  <img [src]="this.journey.img" alt="{{ this.journey.name }} img" />
   <h4>{{ this.journey.price }}</h4>
 </div>

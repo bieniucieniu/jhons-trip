@@ -1,103 +1,15 @@
 {
   "journeys": [
     {
-      "name": "",
-      "country": "",
-      "city": "",
-      "start": 0,
-      "end": 0,
-      "price": 0,
-      "maxPeople": 0,
+      "name": "Lisbon Trip",
+      "country": "Portugal",
+      "city": "Lisbon",
+      "start": 1705235725,
+      "end": 1705840525,
+      "price": 1000,
+      "maxPeople": 4,
       "description": "",
-      "img": ""
-    },
-    {
-      "name": "",
-      "country": "",
-      "city": "",
-      "start": 0,
-      "end": 0,
-      "price": 0,
-      "maxPeople": 0,
-      "description": "",
-      "img": ""
-    },
-    {
-      "name": "",
-      "country": "",
-      "city": "",
-      "start": 0,
-      "end": 0,
-      "price": 0,
-      "maxPeople": 0,
-      "description": "",
-      "img": ""
-    },
-    {
-      "name": "",
-      "country": "",
-      "city": "",
-      "start": 0,
-      "end": 0,
-      "price": 0,
-      "maxPeople": 0,
-      "description": "",
-      "img": ""
-    },
-    {
-      "name": "",
-      "country": "",
-      "city": "",
-      "start": 0,
-      "end": 0,
-      "price": 0,
-      "maxPeople": 0,
-      "description": "",
-      "img": ""
-    },
-    {
-      "name": "",
-      "country": "",
-      "city": "",
-      "start": 0,
-      "end": 0,
-      "price": 0,
-      "maxPeople": 0,
-      "description": "",
-      "img": ""
-    },
-    {
-      "name": "",
-      "country": "",
-      "city": "",
-      "start": 0,
-      "end": 0,
-      "price": 0,
-      "maxPeople": 0,
-      "description": "",
-      "img": ""
-    },
-    {
-      "name": "",
-      "country": "",
-      "city": "",
-      "start": 0,
-      "end": 0,
-      "price": 0,
-      "maxPeople": 0,
-      "description": "",
-      "img": ""
-    },
-    {
-      "name": "",
-      "country": "",
-      "city": "",
-      "start": 0,
-      "end": 0,
-      "price": 0,
-      "maxPeople": 0,
-      "description": "",
-      "img": ""
+      "img": "https://placehold.co/300x200"
     }
   ]
 }
