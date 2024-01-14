@@ -29,12 +29,18 @@ dependencies:
   '@angular/router':
     specifier: ^17.0.0
     version: 17.0.0(@angular/common@17.0.0)(@angular/core@17.0.0)(@angular/platform-browser@17.0.0)(rxjs@7.8.0)
+  '@types/uuid':
+    specifier: ^9.0.7
+    version: 9.0.7
   rxjs:
     specifier: ~7.8.0
     version: 7.8.0
   tslib:
     specifier: ^2.3.0
     version: 2.3.0
+  uuid:
+    specifier: ^9.0.1
+    version: 9.0.1
   zone.js:
     specifier: ~0.14.2
     version: 0.14.2
@@ -2469,6 +2475,10 @@ packages:
     dependencies:
       '@types/node': 20.11.0
     dev: true
+
+  /@types/uuid@9.0.7:
+    resolution: {integrity: sha512-WUtIVRUZ9i5dYXefDEAI7sh9/O7jGvHg7Df/5O/gtH3Yabe5odI3UWopVR1qbPXQtvOxWu3mM4XxlYeZtMWF4g==}
+    dev: false
 
   /@types/ws@8.5.10:
     resolution: {integrity: sha512-vmQSUcfalpIq0R9q7uTo2lXs6eGIpt9wtnLdMv9LVpIjCA/+ufZRozlVoVelIYixx1ugCBKDhn89vnsEGOCx9A==}
@@ -7055,6 +7065,11 @@ packages:
     resolution: {integrity: sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==}
     hasBin: true
     dev: true
+
+  /uuid@9.0.1:
+    resolution: {integrity: sha512-b+1eJOlsR9K8HJpow9Ok3fiWOWSIcIzXodvv0rQjVoOVNpWMpxf1wZNpt4y9h10odCNrqnYp1OBzRktckBe3sA==}
+    hasBin: true
+    dev: false
 
   /validate-npm-package-license@3.0.4:
     resolution: {integrity: sha512-DpKm2Ui/xN7/HQKCtpZxoRWBhZ9Z0kqtygG8XCgNQ8ZlDnxuQmWhj566j8fN4Cu3/JmbhsDo7fcAJq4s9h27Ew==}

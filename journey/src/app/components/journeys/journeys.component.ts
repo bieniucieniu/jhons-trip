@@ -3,11 +3,13 @@ import { Component } from "@angular/core"
 import { Journey } from "../../journey"
 import { CommonModule } from "@angular/common"
 import { JourneyComponent } from "../journey/journey.component"
+import { BookDialogComponent } from "../book-dialog/book-dialog.component"
+import { v4 as uuidv4 } from "uuid"
 
 @Component({
   selector: "app-journeys",
   standalone: true,
-  imports: [CommonModule, JourneyComponent],
+  imports: [CommonModule, JourneyComponent, BookDialogComponent],
   templateUrl: "./journeys.component.html",
   styleUrl: "./journeys.component.scss",
 })
@@ -17,7 +19,11 @@ export class JourneysComponent {
 
   ngOnInit() {
     this.getJourneys().subscribe((data) => {
-      this.journeys = data.journeys
+      this.journeys = data.journeys.map((e) => ({
+        ...e,
+        id: uuidv4(),
+        booked: 0,
+      }))
     })
   }
 

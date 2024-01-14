@@ -1,14 +1,23 @@
-<div>
-  <h2>{{ this.journey.name }}</h2>
-  <div>
-    <span>{{ this.journey.country }}</span> <span>{{ this.journey.city }}</span>
-  </div>
-  <p>{{ this.journey.description }}</p>
-  <p>for: {{ this.journey.maxPeople }} max</p>
-  <div>
-    <span>{{ this.journey.start | date }}</span>
-    <span>{{ this.journey.city | date }}</span>
-  </div>
-  <img [src]="this.journey.img" alt="{{ this.journey.name }} img" />
-  <h4>{{ this.journey.price }}</h4>
+<h2>{{ this.journey.name }}</h2>
+<div class="location">
+  <span>{{ this.journey.country }}</span> <span>{{ this.journey.city }}</span>
+</div>
+<ul class="info">
+  <li>from: {{ this.journey.start * 1000 | date }}</li>
+  <li>to: {{ this.journey.end * 1000 | date }}</li>
+  <li>
+    slots left: {{ this.journey.maxPeople - this.journey.booked }} from
+    {{ this.journey.maxPeople }} total
+  </li>
+</ul>
+<div class="description">
+  <p class="content" [ngClass]="{ open: this.open === true }">
+    {{ this.journey.description }}
+  </p>
+
+  <button (click)="toggle()">{{ this.open ? "less" : "more" }}</button>
+</div>
+<img [src]="this.journey.img" alt="{{ this.journey.name }} img" />
+<div class="price">
+  <span>{{ this.journey.price }},-</span>
 </div>

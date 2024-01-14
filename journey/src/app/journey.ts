@@ -1,4 +1,5 @@
 export interface Journey {
+  id: string
   name: string
   country: string
   city: string
@@ -8,4 +9,5 @@ export interface Journey {
   maxPeople: number
   description: string
   img: string
+  booked: number
 }

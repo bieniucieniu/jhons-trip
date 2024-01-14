@@ -11,4 +11,9 @@ import { CommonModule } from "@angular/common"
 })
 export class JourneyComponent {
   @Input() journey!: Journey
+  open: boolean = false
+
+  toggle() {
+    this.open = !this.open
+  }
 }
