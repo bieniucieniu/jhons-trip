@@ -2,7 +2,8 @@
   ul {
     list-style: none;
     display: flex;
-    flex-direction: column;
-    max-width: min-content;
+    justify-content: start;
+    flex-direction: row;
+    flex-wrap: wrap;
   }
 }

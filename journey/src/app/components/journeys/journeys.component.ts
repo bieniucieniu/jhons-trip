@@ -16,6 +16,7 @@ import { v4 as uuidv4 } from "uuid"
 export class JourneysComponent {
   constructor(private http: HttpClient) {}
   journeys: Journey[] | undefined = undefined
+  booking: string = ""
 
   ngOnInit() {
     this.getJourneys().subscribe((data) => {
@@ -25,6 +26,19 @@ export class JourneysComponent {
         booked: 0,
       }))
     })
+  }
+
+  book(param: { id: string; num: number }) {
+    const journey = this.journeys?.find((e) => e.id === param.id)
+    if (!journey) return
+
+    if (journey.maxPeople >= journey.booked + param.num) {
+      journey.booked -= param.num
+
+      this.journeys = this.journeys?.map((e) =>
+        journey.id === param.id ? journey : e,
+      )
+    }
   }
 
   getJourneys() {

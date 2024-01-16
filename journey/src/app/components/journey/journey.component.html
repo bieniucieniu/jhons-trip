@@ -15,7 +15,7 @@
     {{ this.journey.description }}
   </p>
 
-  <button (click)="toggle()">{{ this.open ? "less" : "more" }}</button>
+  <button (click)="toggleOpen()">{{ this.open ? "less" : "more" }}</button>
 </div>
 <img [src]="this.journey.img" alt="{{ this.journey.name }} img" />
 <div class="price">

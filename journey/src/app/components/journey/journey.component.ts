@@ -13,7 +13,7 @@ export class JourneyComponent {
   @Input() journey!: Journey
   open: boolean = false
 
-  toggle() {
+  toggleOpen() {
     this.open = !this.open
   }
 }
