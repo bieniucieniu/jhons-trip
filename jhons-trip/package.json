@@ -1,0 +1,23 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "author": "",
+  "main": "index.js",
+  "description": "",
+  "license": "ISC",
+  "scripts": {
+    "run": "tsx ./src/main.ts",
+    "dev": "tsx ./src/main.ts"
+  },
+  "devDependencies": {
+    "drizzle-kit": "^0.20.13",
+    "tsx": "^4.7.0"
+  },
+  "dependencies": {
+    "@types/better-sqlite3": "^7.6.8",
+    "better-sqlite3": "^9.3.0",
+    "dotenv": "^16.3.1",
+    "drizzle-orm": "^0.29.3",
+    "jsonwebtoken": "^9.0.2"
+  }
+}
