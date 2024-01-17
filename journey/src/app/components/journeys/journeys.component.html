@@ -1,5 +1,28 @@
+<form [formGroup]="filtersControlls" (ngSubmit)="setFilteredJourneys()">
+  <div>
+    <label for="end"> end </label>
+    <input id="end" type="date" formcontrolname="end" />
+  </div>
+  <div>
+    <label for="start"> start </label>
+    <input id="start" type="date" formcontrolname="start" />
+  </div>
+  <div>
+    <label for="slots"> slots </label>
+    <input id="slots" type="number" formcontrolname="slots" />
+  </div>
+  <div>
+    <label for="country"> country </label>
+    <input id="country" type="text" formcontrolname="country" />
+  </div>
+  <div>
+    <label for="maxPrice"> max price </label>
+    <input id="maxPrice" type="number" formcontrolname="maxPrice" />
+  </div>
+  <button class="button" type="submit">submit</button>
+</form>
 <ul>
-  <li *ngFor="let journey of journeys">
+  <li *ngFor="let journey of filteredJourneys">
     <app-journey
       [journey]="journey"
       (bookEvent)="book($event)"
