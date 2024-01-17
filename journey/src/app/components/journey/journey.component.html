@@ -21,3 +21,27 @@
 <div class="price">
   <span>{{ this.journey.price }},-</span>
 </div>
+<button (click)="toggleDeleting()">
+  {{ this.deleting ? "close" : "delete" }}
+</button>
+<div *ngIf="deleting">
+  <button (click)="delete()">delete?</button>
+</div>
+<button
+  *ngIf="journey.booked < journey.maxPeople; else elseBlock"
+  (click)="toggleBooking()"
+>
+  {{ this.booking ? "close" : "book" }}
+</button>
+<ng-template #elseBlock>Sold Out</ng-template>
+<div *ngIf="booking && journey.booked < journey.maxPeople">
+  <div class="input">
+    people: <input type="number" [(ngModel)]="forPeople" />
+  </div>
+  <button
+    [disabled]="!forPeople || journey.maxPeople < forPeople"
+    (click)="book()"
+  >
+    book
+  </button>
+</div>

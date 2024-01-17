@@ -1,0 +1,40 @@
+<form [formGroup]="newJourneyContrills" (ngSubmit)="onSubmit()">
+  <div>
+    <label for="name"> Name </label>
+    <input id="name" type="text" formControlName="name" />
+  </div>
+  <div>
+    <label for="country"> country </label>
+    <input id="country" type="text" formControlName="country" />
+  </div>
+  <div>
+    <label for="city"> city </label>
+    <input id="city" type="text" formControlName="city" />
+  </div>
+  <div>
+    <label for="start"> start </label>
+    <input id="start" type="date" formControlName="start" />
+  </div>
+  <div>
+    <label for="end"> end </label>
+    <input id="end" type="date" formControlName="end" />
+  </div>
+  <div>
+    <label for="price"> price </label>
+    <input id="price" type="number" formControlName="price" />
+  </div>
+  <div>
+    <label for="maxPeople"> max people </label>
+    <input id="maxPeople" type="number" formControlName="maxPeople" />
+  </div>
+  <div>
+    <label for="description"> description </label>
+    <input id="description" type="text" formControlName="description" />
+  </div>
+  <div>
+    <label for="img"> image link </label>
+    <input id="img" type="url" formControlName="img" />
+  </div>
+
+  <button class="button" type="submit">submit</button>
+</form>

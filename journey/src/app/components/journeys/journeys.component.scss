@@ -3,7 +3,8 @@
     list-style: none;
     display: flex;
     justify-content: start;
-    flex-direction: row;
+    gap: 20px;
+    flex-direction: column;
     flex-wrap: wrap;
   }
 }

@@ -1,11 +1,9 @@
 <ul>
   <li *ngFor="let journey of journeys">
-    <app-journey [journey]="journey"></app-journey>
-    <button>book</button>
+    <app-journey
+      [journey]="journey"
+      (bookEvent)="book($event)"
+      (deleteEvent)="delateJourney($event)"
+    ></app-journey>
   </li>
 </ul>
-<app-book-dialog
-  *ngIf="booking !== ''"
-  [booking]="booking"
-  (bookEvent)="book($event)"
-></app-book-dialog>

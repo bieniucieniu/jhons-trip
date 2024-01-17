@@ -1,0 +1,28 @@
+:host {
+  aside {
+    div.title {
+      position: sticky;
+      top: 10px;
+      display: flex;
+      height: 100svh;
+      justify-content: center;
+      align-items: center;
+      h1 {
+        font-size: 40px;
+      }
+    }
+    div.links {
+      position: sticky;
+      top: 10px;
+      a {
+        text-decoration: none;
+        color: black;
+      }
+      a:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}

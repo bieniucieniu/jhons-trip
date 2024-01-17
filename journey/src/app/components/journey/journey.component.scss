@@ -8,6 +8,20 @@
   padding: 10px 15px;
   max-width: min-content;
 
+  button {
+    margin-top: 0;
+    padding-top: 0;
+    border: none;
+    outline: none;
+    width: 100%;
+    background-color: #dddd;
+    border-radius: 3px;
+  }
+  .input {
+    display: flex;
+    justify-content: space-between;
+  }
+
   h2 {
     padding: 0;
   }
@@ -19,15 +33,6 @@
   }
 
   .description {
-    button {
-      margin-top: 0;
-      padding-top: 0;
-      border: none;
-      outline: none;
-      width: 100%;
-      background-color: #dddd;
-      border-radius: 3px;
-    }
     .content {
       padding-bottom: 0;
       margin-bottom: 0;

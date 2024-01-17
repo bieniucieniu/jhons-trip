@@ -1,12 +1,12 @@
 import { Component } from "@angular/core"
 import { CommonModule } from "@angular/common"
 import { RouterOutlet } from "@angular/router"
-import { JourneysComponent } from "./components/journeys/journeys.component"
+import { BookingComponent } from "./components/booking/booking.component"
 
 @Component({
   selector: "app-root",
   standalone: true,
-  imports: [CommonModule, RouterOutlet, JourneysComponent],
+  imports: [CommonModule, RouterOutlet, BookingComponent],
   templateUrl: "./app.component.html",
   styleUrl: "./app.component.scss",
 })
