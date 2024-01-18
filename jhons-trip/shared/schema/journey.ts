@@ -28,6 +28,7 @@ export const region = sqliteTable("region", {
     onUpdate: "cascade",
   }),
 });
+
 export const countryRelations = relations(country, ({ many }) => ({
   region: many(region),
 }));
