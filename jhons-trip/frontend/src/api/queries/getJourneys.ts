@@ -18,18 +18,21 @@ export default function getJourneys({
     queryFn: async () => {
       const params = new URLSearchParams(
         cleanupObject({
-          limit: String(limit),
+          limit,
           name,
-          countryId: String(countryId),
-          id: String(id),
+          countryId,
+          id,
         }),
       ).toString();
 
       const res = await (
-        await fetch(getBaseUrl() + "api/regions" + params ? "&" + params : "", {
-          mode: "cors",
-          method: "GET",
-        })
+        await fetch(
+          getBaseUrl() + "api/regions" + (params ? "&" + params : ""),
+          {
+            mode: "cors",
+            method: "GET",
+          },
+        )
       ).json();
       if (res["error"]) throw new Error(res["error"]);
       return res["data"] as {

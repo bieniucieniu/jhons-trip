@@ -24,18 +24,21 @@ export default function getRegions({
     queryFn: async () => {
       const params = new URLSearchParams(
         cleanupObject({
-          limit: String(limit),
+          limit,
           name,
-          countryId: String(countryId),
-          regionId: String(regionId),
+          countryId,
+          regionId,
         }),
       ).toString();
 
       const res = await (
-        await fetch(getBaseUrl() + "api/regions" + params ? "&" + params : "", {
-          mode: "cors",
-          method: "GET",
-        })
+        await fetch(
+          getBaseUrl() + "api/regions" + (params ? "&" + params : ""),
+          {
+            mode: "cors",
+            method: "GET",
+          },
+        )
       ).json();
       if (res["error"]) throw new Error(res["error"]);
       return res["data"] as { id: number; name: string; countryId: number }[];

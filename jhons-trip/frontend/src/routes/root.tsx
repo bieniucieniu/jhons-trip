@@ -1,3 +1,9 @@
+import JourneysList from "@/components/journeysList";
+
 export default function Root() {
-  return <main></main>;
+  return (
+    <main>
+      <JourneysList />
+    </main>
+  );
 }

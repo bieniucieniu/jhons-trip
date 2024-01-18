@@ -16,9 +16,9 @@ export default function getUserHistory({
     queryFn: async () => {
       const params = new URLSearchParams(
         cleanupObject({
-          limit: String(limit),
+          limit,
           name,
-          journeyId: String(journeyId),
+          journeyId,
         }),
       ).toString();
 

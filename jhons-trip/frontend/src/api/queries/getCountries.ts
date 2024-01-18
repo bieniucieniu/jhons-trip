@@ -21,7 +21,7 @@ export default function getCoutries({
 
       const res = await (
         await fetch(
-          getBaseUrl() + "api/countries" + params ? "&" + params : "",
+          getBaseUrl() + "api/countries" + (params ? "&" + params : ""),
           {
             mode: "cors",
             method: "GET",

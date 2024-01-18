@@ -1,4 +1,4 @@
-import getBaseUrl from "@/src/utlis/getBaseUrl";
+import getBaseUrl from "@/lib/getBaseUrl";
 import { useMutation } from "@tanstack/react-query";
 
 export default function book(
