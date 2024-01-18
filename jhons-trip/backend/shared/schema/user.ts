@@ -10,14 +10,20 @@ export const user = sqliteTable("user", {
 });
 export const history = sqliteTable("history", {
   id: integer("id").primaryKey(),
-  userId: integer("user_id").references(() => user.id, {
-    onDelete: "restrict",
-    onUpdate: "cascade",
-  }),
-  journeyId: integer("journey_id").references(() => journey.id, {
-    onDelete: "restrict",
-    onUpdate: "cascade",
-  }),
+  for: integer("for").notNull(),
+  journeyName: text("journey_name").notNull(),
+  userId: integer("user_id")
+    .notNull()
+    .references(() => user.id, {
+      onDelete: "restrict",
+      onUpdate: "cascade",
+    }),
+  journeyId: integer("journey_id")
+    .notNull()
+    .references(() => journey.id, {
+      onDelete: "restrict",
+      onUpdate: "cascade",
+    }),
 });
 
 export const userRelation = relations(user, ({ many }) => ({
