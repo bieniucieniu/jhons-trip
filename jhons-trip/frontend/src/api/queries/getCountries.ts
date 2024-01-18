@@ -1,20 +1,23 @@
 import { useQuery } from "@tanstack/react-query";
-import getBaseUrl from "../../utlis/getBaseUrl";
+import getBaseUrl from "@/lib/getBaseUrl";
+import cleanupObject from "@/lib/cleanupObject";
 
 export default function getCoutries({
   limit,
   name,
 }: {
-  limit: number;
-  name: string;
+  limit?: number;
+  name?: string;
 }) {
   return useQuery({
     queryKey: ["countries", String(limit), name],
     queryFn: async () => {
-      const params = new URLSearchParams({
-        limit: String(limit),
-        name,
-      }).toString();
+      const params = new URLSearchParams(
+        cleanupObject({
+          limit: String(limit),
+          name,
+        }),
+      ).toString();
 
       const res = await (
         await fetch(
@@ -26,7 +29,7 @@ export default function getCoutries({
         )
       ).json();
       if (res["error"]) throw new Error(res["error"]);
-      return res["data"];
+      return res["data"] as { id: number; name: string; code: string }[];
     },
     staleTime: 10000,
   });

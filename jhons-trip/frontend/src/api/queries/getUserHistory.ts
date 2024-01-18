@@ -1,23 +1,26 @@
 import { useQuery } from "@tanstack/react-query";
-import getBaseUrl from "../../utlis/getBaseUrl";
+import getBaseUrl from "@/lib/getBaseUrl";
+import cleanupObject from "@/lib/cleanupObject";
 
 export default function getUserHistory({
   limit,
   name,
   journeyId,
 }: {
-  limit: number;
-  name: string;
-  journeyId: number;
+  limit?: number;
+  name?: string;
+  journeyId?: number;
 }) {
   return useQuery({
-    queryKey: ["history", String(limit), name, String(journeyId)],
+    queryKey: ["countries"],
     queryFn: async () => {
-      const params = new URLSearchParams({
-        limit: String(limit),
-        name,
-        journeyId: String(journeyId),
-      }).toString();
+      const params = new URLSearchParams(
+        cleanupObject({
+          limit: String(limit),
+          name,
+          journeyId: String(journeyId),
+        }),
+      ).toString();
 
       const res = await (
         await fetch(
@@ -29,8 +32,14 @@ export default function getUserHistory({
         )
       ).json();
       if (res["error"]) throw new Error(res["error"]);
-      return res["data"];
+      return res["data"] as {
+        id: number;
+        for: number;
+        journeyName: string;
+        userId: number;
+        journeyId: number;
+      }[];
     },
-    staleTime: 10000,
+    staleTime: 0,
   });
 }

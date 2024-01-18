@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
-import getBaseUrl from "../../utlis/getBaseUrl";
+import getBaseUrl from "@/lib/getBaseUrl";
+import cleanupObject from "@/lib/cleanupObject";
 
 export default function getRegions({
   limit,
@@ -7,10 +8,10 @@ export default function getRegions({
   countryId,
   regionId,
 }: {
-  limit: number;
-  name: string;
-  countryId: number;
-  regionId: number;
+  limit?: number;
+  name?: string;
+  countryId?: number;
+  regionId?: number;
 }) {
   return useQuery({
     queryKey: [
@@ -21,12 +22,14 @@ export default function getRegions({
       String(regionId),
     ],
     queryFn: async () => {
-      const params = new URLSearchParams({
-        limit: String(limit),
-        name,
-        countryId: String(countryId),
-        regionId: String(regionId),
-      }).toString();
+      const params = new URLSearchParams(
+        cleanupObject({
+          limit: String(limit),
+          name,
+          countryId: String(countryId),
+          regionId: String(regionId),
+        }),
+      ).toString();
 
       const res = await (
         await fetch(getBaseUrl() + "api/regions" + params ? "&" + params : "", {
@@ -35,7 +38,7 @@ export default function getRegions({
         })
       ).json();
       if (res["error"]) throw new Error(res["error"]);
-      return res["data"];
+      return res["data"] as { id: number; name: string; countryId: number }[];
     },
     staleTime: 10000,
   });
