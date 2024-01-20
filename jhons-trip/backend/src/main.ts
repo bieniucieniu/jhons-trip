@@ -88,24 +88,23 @@ app.get("/api/regions", async (req, res) => {
 
 app.get("/api/journeys", async (req, res) => {
   res.setHeader("Content-Type", "application/json");
-  const { limit, name, regionId, countryId } = req.query;
-  const l = Number(limit) ?? 10;
-  const n = String(name);
-  const c = Number(countryId);
-  const r = Number(regionId);
+  const { limit, name, regionId } = req.query;
+  const l = limit ? Number(limit) : 10;
+  const n = name ? String(name) : undefined;
+  const r = regionId ? Number(regionId) : undefined;
 
   try {
     const data = await db
       .select()
-      .from(region)
+      .from(journey)
       .limit(l)
       .where(
         and(
           n ? like(journey.name, n) : undefined,
-          c ? eq(journey.countryId, c) : undefined,
           r ? eq(journey.regionId, r) : undefined,
         ),
       );
+
     return res.json({ data });
   } catch (e) {
     res.status(406);

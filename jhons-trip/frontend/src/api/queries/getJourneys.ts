@@ -14,7 +14,6 @@ const journeysSchema = z
     slots: z.number().int(),
     booked: z.number().int(),
     regionId: z.number().int(),
-    countryId: z.number().int(),
   })
   .array();
 
@@ -22,34 +21,36 @@ export default function getJourneys({
   limit,
   name,
   id,
-  countryId,
+  regionId,
 }: {
   limit?: number;
   name?: string;
-  countryId?: number;
+  regionId?: number;
   id?: number;
 }) {
   return useQuery({
-    queryKey: ["journeys", String(limit), name, String(countryId)],
+    queryKey: ["journeys", String(limit), name, String(regionId)],
     queryFn: async () => {
       const params = new URLSearchParams(
         cleanupObject({
           limit,
           name,
-          countryId,
+          regionId,
           id,
         }),
       ).toString();
 
       const res = await (
         await fetch(
-          getBaseUrl() + "api/regions" + (params ? "&" + params : ""),
+          getBaseUrl() + "api/journeys" + (params ? "&" + params : ""),
           {
             mode: "cors",
             method: "GET",
           },
         )
       ).json();
+
+      console.log(res);
       if (res["error"]) throw new Error(res["error"]);
       return journeysSchema.parse(res["data"]);
     },

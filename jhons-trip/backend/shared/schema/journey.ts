@@ -16,12 +16,6 @@ export const journey = sqliteTable("journey", {
       onDelete: "cascade",
       onUpdate: "cascade",
     }),
-  countryId: integer("country_id")
-    .notNull()
-    .references(() => country.id, {
-      onDelete: "cascade",
-      onUpdate: "cascade",
-    }),
 });
 
 export const country = sqliteTable("country", {
@@ -56,9 +50,5 @@ export const journeyRelation = relations(journey, ({ one }) => ({
   region: one(region, {
     fields: [journey.regionId],
     references: [region.id],
-  }),
-  country: one(country, {
-    fields: [journey.countryId],
-    references: [country.id],
   }),
 }));
