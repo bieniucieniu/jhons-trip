@@ -1,14 +1,15 @@
 import { country, journey, region } from "@/shared/schema/journey";
 import { db } from "./db";
+import { faker } from "@faker-js/faker";
 
 const countriesCount = 5;
 const regionsCount = 4;
 const journeysCount = 3;
 
 async function insertTestData() {
-  const c = Array.from({ length: countriesCount }).map((_, i) => ({
-    name: "countries" + (i + 1),
-    code: "CT" + (i + 1),
+  const c = Array.from({ length: countriesCount }).map(() => ({
+    name: faker.location.country(),
+    code: faker.location.countryCode(),
   }));
   const countrys = await db.insert(country).values(c).returning();
 
@@ -20,7 +21,7 @@ async function insertTestData() {
   countrys.forEach((v) => {
     for (let i = 0; i < regionsCount; i++) {
       r.push({
-        name: "Region" + (i + 1),
+        name: faker.location.county(),
         countryId: v.id,
       });
     }
@@ -44,13 +45,13 @@ async function insertTestData() {
   regions.forEach((v) => {
     for (let i = 0; i < journeysCount; i++) {
       j.push({
-        name: "journey" + (i + 1),
+        name: faker.location.city(),
         regionId: v.id,
         end: end.getTime(),
         start: start.getTime(),
         slots: 30,
-        description: "journeys " + v.name + (i + 1),
-        details: "journeys " + v.name + (i + 1),
+        description: faker.lorem.slug(10),
+        details: faker.lorem.slug(30),
       });
     }
   });

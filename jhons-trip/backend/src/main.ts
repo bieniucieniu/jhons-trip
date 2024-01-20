@@ -42,12 +42,20 @@ app.get("/api/login", async (req, res) => {
 app.get("/api/countries", async (req, res) => {
   res.setHeader("Content-Type", "application/json");
 
-  const { limit, name } = req.query;
-
-  const l = Number(limit) ?? 10;
-  const n = String(name) ?? "";
+  const { limit, name, id } = req.query;
 
   try {
+    if (id) {
+      const data = await db
+        .select()
+        .from(country)
+        .where(eq(country.id, Number(id)));
+      return res.json({ data });
+    }
+
+    const l = Number(limit) ?? 10;
+    const n = String(name) ?? "";
+
     const data = await db
       .select()
       .from(country)
@@ -62,13 +70,20 @@ app.get("/api/countries", async (req, res) => {
 
 app.get("/api/regions", async (req, res) => {
   res.setHeader("Content-Type", "application/json");
-  const { limit, name, countryId } = req.query;
+  const { limit, name, countryId, id } = req.query;
 
   const l = Number(limit) ?? 10;
   const n = String(name);
   const c = Number(countryId);
 
   try {
+    if (id) {
+      const data = await db
+        .select()
+        .from(region)
+        .where(eq(region.id, Number(id)));
+      return res.json({ data });
+    }
     const data = await db
       .select()
       .from(region)
@@ -88,12 +103,21 @@ app.get("/api/regions", async (req, res) => {
 
 app.get("/api/journeys", async (req, res) => {
   res.setHeader("Content-Type", "application/json");
-  const { limit, name, regionId } = req.query;
-  const l = limit ? Number(limit) : 10;
-  const n = name ? String(name) : undefined;
-  const r = regionId ? Number(regionId) : undefined;
+  const { limit, name, regionId, id } = req.query;
 
   try {
+    if (id) {
+      const data = await db
+        .select()
+        .from(journey)
+        .where(eq(journey.id, Number(id)));
+      return res.json({ data });
+    }
+
+    const l = limit ? Number(limit) : 10;
+    const n = name ? String(name) : undefined;
+    const r = regionId ? Number(regionId) : undefined;
+
     const data = await db
       .select()
       .from(journey)
