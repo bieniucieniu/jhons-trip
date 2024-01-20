@@ -6,6 +6,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { format } from "date-fns";
 
 export default function JourneyDisplay({
   name,
@@ -25,8 +26,8 @@ export default function JourneyDisplay({
       <CardContent>
         <p>{details}</p>
         <ul>
-          <li>start: {start}</li>
-          <li>end: {end}</li>
+          <li>start: {format(start, "MM/dd/yyyy")}</li>
+          <li>end: {format(end, "MM/dd/yyyy")}</li>
           <li>remaining slots: {slots - booked}</li>
           <li>booked: {booked}</li>
         </ul>
