@@ -1,4 +1,4 @@
-import getBaseUrl from "../utlis/getBaseUrl";
+import getBaseUrl from "@/lib/getBaseUrl";
 
 export default async function genUser(
   username: string,

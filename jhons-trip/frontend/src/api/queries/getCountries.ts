@@ -1,6 +1,15 @@
 import { useQuery } from "@tanstack/react-query";
 import getBaseUrl from "@/lib/getBaseUrl";
 import cleanupObject from "@/lib/cleanupObject";
+import { z } from "zod";
+
+const countriesSchema = z
+  .object({
+    id: z.number().int(),
+    name: z.string(),
+    code: z.string(),
+  })
+  .array();
 
 export default function getCoutries({
   limit,
@@ -29,7 +38,7 @@ export default function getCoutries({
         )
       ).json();
       if (res["error"]) throw new Error(res["error"]);
-      return res["data"] as { id: number; name: string; code: string }[];
+      return countriesSchema.parse(res["data"]);
     },
     staleTime: 10000,
   });

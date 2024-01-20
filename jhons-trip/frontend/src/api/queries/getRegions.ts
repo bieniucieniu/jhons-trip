@@ -1,6 +1,15 @@
 import { useQuery } from "@tanstack/react-query";
 import getBaseUrl from "@/lib/getBaseUrl";
 import cleanupObject from "@/lib/cleanupObject";
+import { z } from "zod";
+
+const regionsSchema = z
+  .object({
+    id: z.number().int(),
+    name: z.string(),
+    countryId: z.number().int(),
+  })
+  .array();
 
 export default function getRegions({
   limit,
@@ -41,7 +50,7 @@ export default function getRegions({
         )
       ).json();
       if (res["error"]) throw new Error(res["error"]);
-      return res["data"] as { id: number; name: string; countryId: number }[];
+      return regionsSchema.parse(res["data"]);
     },
     staleTime: 10000,
   });

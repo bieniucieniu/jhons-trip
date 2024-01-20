@@ -1,6 +1,22 @@
 import { useQuery } from "@tanstack/react-query";
 import getBaseUrl from "@/lib/getBaseUrl";
 import cleanupObject from "@/lib/cleanupObject";
+import { z } from "zod";
+
+const journeysSchema = z
+  .object({
+    id: z.number().int(),
+    name: z.string(),
+    description: z.string(),
+    details: z.string(),
+    start: z.number().int(),
+    end: z.number().int(),
+    slots: z.number().int(),
+    booked: z.number().int(),
+    regionId: z.number().int(),
+    countryId: z.number().int(),
+  })
+  .array();
 
 export default function getJourneys({
   limit,
@@ -35,18 +51,7 @@ export default function getJourneys({
         )
       ).json();
       if (res["error"]) throw new Error(res["error"]);
-      return res["data"] as {
-        id: number;
-        name: string;
-        description: string;
-        details: string;
-        start: number;
-        end: number;
-        slots: number;
-        booked: number;
-        regionId: number;
-        countryId: number;
-      }[];
+      return journeysSchema.parse(res["data"]);
     },
     staleTime: 10000,
   });

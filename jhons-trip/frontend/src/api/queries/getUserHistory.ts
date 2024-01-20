@@ -1,6 +1,17 @@
 import { useQuery } from "@tanstack/react-query";
 import getBaseUrl from "@/lib/getBaseUrl";
 import cleanupObject from "@/lib/cleanupObject";
+import { z } from "zod";
+
+const userHistorySchema = z
+  .object({
+    id: z.number().int(),
+    for: z.number().int(),
+    journeyName: z.string(),
+    userId: z.number().int(),
+    journeyId: z.number().int(),
+  })
+  .array();
 
 export default function getUserHistory({
   limit,
@@ -32,13 +43,7 @@ export default function getUserHistory({
         )
       ).json();
       if (res["error"]) throw new Error(res["error"]);
-      return res["data"] as {
-        id: number;
-        for: number;
-        journeyName: string;
-        userId: number;
-        journeyId: number;
-      }[];
+      return userHistorySchema.parse(res["data"]);
     },
     staleTime: 0,
   });
