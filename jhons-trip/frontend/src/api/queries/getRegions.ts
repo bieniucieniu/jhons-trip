@@ -21,7 +21,7 @@ export default function getRegions({
   id?: number;
 }) {
   return useQuery({
-    queryKey: ["regions", String(limit), name, String(countryId), String(id)],
+    queryKey: ["regions", "limit" + limit, name, "country" + countryId],
     queryFn: async () => {
       const params = new URLSearchParams(
         cleanupObject({

@@ -29,7 +29,7 @@ export default function getJourneys({
   id?: number;
 }) {
   return useQuery({
-    queryKey: ["journeys", String(limit), name, String(regionId)],
+    queryKey: ["journeys", "limit" + limit, name, "region" + regionId],
     queryFn: async () => {
       const params = new URLSearchParams(
         cleanupObject({

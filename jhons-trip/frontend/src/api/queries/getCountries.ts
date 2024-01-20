@@ -19,11 +19,11 @@ export default function getCoutries({
   id?: number;
 }) {
   return useQuery({
-    queryKey: ["countries", String(limit), name],
+    queryKey: ["countries", "limit" + limit, name],
     queryFn: async () => {
       const params = new URLSearchParams(
         cleanupObject({
-          limit: String(limit),
+          limit,
           name,
           id,
         }),
