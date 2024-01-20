@@ -19,7 +19,7 @@ export default function Journey() {
   if (!data || data[0] === undefined) return <div>no data</div>;
 
   return (
-    <main>
+    <main className="m-auto max-w-screen-lg py-10">
       <JourneyDisplay {...data[0]} />
     </main>
   );

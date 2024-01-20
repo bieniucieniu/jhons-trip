@@ -15,10 +15,12 @@ export default function getUserHistory({
   limit,
   name,
   journeyId,
+  offset,
 }: {
   limit?: number;
   name?: string;
   journeyId?: number;
+  offset?: number;
 }) {
   return useQuery({
     queryKey: ["countries"],
@@ -28,6 +30,7 @@ export default function getUserHistory({
           limit,
           name,
           journeyId,
+          offset,
         }),
       ).toString();
 

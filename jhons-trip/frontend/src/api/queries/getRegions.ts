@@ -14,11 +14,13 @@ export default function getRegions({
   name,
   countryId,
   id,
+  offset,
 }: {
   limit?: number;
   name?: string;
   countryId?: number;
   id?: number;
+  offset?: number;
 }) {
   return useQuery({
     queryKey: ["regions", "limit" + limit, name, "country" + countryId],
@@ -29,6 +31,7 @@ export default function getRegions({
           name,
           countryId,
           id,
+          offset,
         }),
       ).toString();
 

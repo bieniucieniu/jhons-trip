@@ -25,7 +25,7 @@ export async function genUser(
   }
 }
 
-type User =
+export type User =
   | {
       username: string;
       userID: number;
@@ -50,7 +50,7 @@ export async function getUser(
     };
 
     if (callback !== undefined) callback(body);
-    return res;
+    return body;
   } catch (e) {
     console.log(e);
   }

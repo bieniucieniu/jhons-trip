@@ -1,9 +1,18 @@
 import getJourneys from "@/api/queries/getJourneys";
 import { Link } from "wouter";
 import JourneyDisplay from "./journeyDisplay";
+import { Card } from "./ui/card";
 
-export default function JourneysList() {
-  const { data, status, error, isError, isLoading } = getJourneys({});
+export default function JourneysList({
+  className,
+  query,
+}: {
+  className?: string;
+  query?: Parameters<typeof getJourneys>[0];
+}) {
+  const { data, status, error, isError, isLoading } = getJourneys({
+    ...query,
+  });
   if (isError)
     return (
       <div>
@@ -11,12 +20,23 @@ export default function JourneysList() {
       </div>
     );
   if (isLoading) return <div>{status}</div>;
+  if (!data?.length) <div>no more data</div>;
   return (
-    <ul>
-      {data?.map((props) => (
+    <ul className={className}>
+      {data?.map(({ details: _, ...props }) => (
         <li key={props.name + props.id}>
-          <JourneyDisplay {...props}></JourneyDisplay>
-          <Link href={`/journey/${props.id}`}>more</Link>
+          <Card>
+            <JourneyDisplay {...props}></JourneyDisplay>
+            <Link
+              href={`/journey/${props.id}`}
+              className="group ml-3 leading-8 hover:leading-10 transition-all"
+            >
+              <span className="underline-offset-2 group-hover:underline">
+                book / read more about {props.name}
+              </span>
+              <span className="group-hover:pl-1 transition-all">&gt;&gt;</span>
+            </Link>
+          </Card>
         </li>
       ))}
     </ul>

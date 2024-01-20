@@ -13,6 +13,14 @@ const journeysSchema = z.object({
   slots: z.number().int(),
   booked: z.number().int(),
   regionId: z.number().int(),
+  imageUrl: z.string().optional(),
+  region: z
+    .object({
+      id: z.number().int(),
+      name: z.string(),
+      countryId: z.number(),
+    })
+    .optional(),
 });
 
 export type Journey = z.infer<typeof journeysSchema>;
@@ -22,14 +30,22 @@ export default function getJourneys({
   name,
   id,
   regionId,
+  offset,
 }: {
   limit?: number;
   name?: string;
   regionId?: number;
   id?: number;
+  offset?: number;
 }) {
   return useQuery({
-    queryKey: ["journeys", "limit" + limit, name, "region" + regionId],
+    queryKey: [
+      "journeys",
+      "limit" + limit,
+      "offset" + offset,
+      name,
+      "region" + regionId,
+    ],
     queryFn: async () => {
       const params = new URLSearchParams(
         cleanupObject({
@@ -37,6 +53,7 @@ export default function getJourneys({
           name,
           regionId,
           id,
+          offset,
         }),
       ).toString();
 

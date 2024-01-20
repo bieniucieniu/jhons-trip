@@ -13,10 +13,12 @@ export default function getCoutries({
   limit,
   name,
   id,
+  offset,
 }: {
   limit?: number;
   name?: string;
   id?: number;
+  offset?: number;
 }) {
   return useQuery({
     queryKey: ["countries", "limit" + limit, name],
@@ -26,6 +28,7 @@ export default function getCoutries({
           limit,
           name,
           id,
+          offset,
         }),
       ).toString();
 
