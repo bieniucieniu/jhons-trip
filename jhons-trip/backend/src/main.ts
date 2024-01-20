@@ -103,31 +103,35 @@ app.get("/api/regions", async (req, res) => {
 
 app.get("/api/journeys", async (req, res) => {
   res.setHeader("Content-Type", "application/json");
-  const { limit, name, regionId, id } = req.query;
+  const { limit, name, regionId, id, offset } = req.query;
 
   try {
     if (id) {
-      const data = await db
-        .select()
-        .from(journey)
-        .where(eq(journey.id, Number(id)));
+      const data = await db.query.journey.findMany({
+        where: eq(journey.id, Number(id)),
+        with: {
+          region: true,
+        },
+      });
       return res.json({ data });
     }
 
     const l = limit ? Number(limit) : 10;
     const n = name ? String(name) : undefined;
     const r = regionId ? Number(regionId) : undefined;
+    const o = offset ? Number(offset) : undefined;
 
-    const data = await db
-      .select()
-      .from(journey)
-      .limit(l)
-      .where(
-        and(
-          n ? like(journey.name, n) : undefined,
-          r ? eq(journey.regionId, r) : undefined,
-        ),
-      );
+    const data = await db.query.journey.findMany({
+      limit: l,
+      offset: o,
+      where: and(
+        n ? like(journey.name, n) : undefined,
+        r ? eq(journey.regionId, r) : undefined,
+      ),
+      with: {
+        region: true,
+      },
+    });
 
     return res.json({ data });
   } catch (e) {
