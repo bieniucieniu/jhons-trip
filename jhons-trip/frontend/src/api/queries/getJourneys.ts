@@ -3,19 +3,19 @@ import getBaseUrl from "@/lib/getBaseUrl";
 import cleanupObject from "@/lib/cleanupObject";
 import { z } from "zod";
 
-const journeysSchema = z
-  .object({
-    id: z.number().int(),
-    name: z.string(),
-    description: z.string(),
-    details: z.string(),
-    start: z.number().int(),
-    end: z.number().int(),
-    slots: z.number().int(),
-    booked: z.number().int(),
-    regionId: z.number().int(),
-  })
-  .array();
+const journeysSchema = z.object({
+  id: z.number().int(),
+  name: z.string(),
+  description: z.string(),
+  details: z.string(),
+  start: z.number().int(),
+  end: z.number().int(),
+  slots: z.number().int(),
+  booked: z.number().int(),
+  regionId: z.number().int(),
+});
+
+export type Journey = z.infer<typeof journeysSchema>;
 
 export default function getJourneys({
   limit,
@@ -42,7 +42,7 @@ export default function getJourneys({
 
       const res = await (
         await fetch(
-          getBaseUrl() + "api/journeys" + (params ? "&" + params : ""),
+          getBaseUrl() + "api/journeys" + (params ? "?" + params : ""),
           {
             mode: "cors",
             method: "GET",
@@ -52,7 +52,7 @@ export default function getJourneys({
 
       console.log(res);
       if (res["error"]) throw new Error(res["error"]);
-      return journeysSchema.parse(res["data"]);
+      return journeysSchema.array().parse(res["data"]);
     },
     staleTime: 10000,
   });

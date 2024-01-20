@@ -3,15 +3,13 @@ import getBaseUrl from "@/lib/getBaseUrl";
 import cleanupObject from "@/lib/cleanupObject";
 import { z } from "zod";
 
-const userHistorySchema = z
-  .object({
-    id: z.number().int(),
-    for: z.number().int(),
-    journeyName: z.string(),
-    userId: z.number().int(),
-    journeyId: z.number().int(),
-  })
-  .array();
+const userHistorySchema = z.object({
+  id: z.number().int(),
+  for: z.number().int(),
+  journeyName: z.string(),
+  userId: z.number().int(),
+  journeyId: z.number().int(),
+});
 
 export default function getUserHistory({
   limit,
@@ -35,7 +33,7 @@ export default function getUserHistory({
 
       const res = await (
         await fetch(
-          getBaseUrl() + "api/countries" + params ? "&" + params : "",
+          getBaseUrl() + "api/countries" + params ? "?" + params : "",
           {
             mode: "cors",
             method: "GET",
@@ -43,7 +41,7 @@ export default function getUserHistory({
         )
       ).json();
       if (res["error"]) throw new Error(res["error"]);
-      return userHistorySchema.parse(res["data"]);
+      return userHistorySchema.array().parse(res["data"]);
     },
     staleTime: 0,
   });

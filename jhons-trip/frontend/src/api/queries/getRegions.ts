@@ -3,46 +3,38 @@ import getBaseUrl from "@/lib/getBaseUrl";
 import cleanupObject from "@/lib/cleanupObject";
 import { z } from "zod";
 
-const regionsSchema = z
-  .object({
-    id: z.number().int(),
-    name: z.string(),
-    countryId: z.number().int(),
-  })
-  .array();
+const regionsSchema = z.object({
+  id: z.number().int(),
+  name: z.string(),
+  countryId: z.number().int(),
+});
 
 export default function getRegions({
   limit,
   name,
   countryId,
-  regionId,
+  id,
 }: {
   limit?: number;
   name?: string;
   countryId?: number;
-  regionId?: number;
+  id?: number;
 }) {
   return useQuery({
-    queryKey: [
-      "regions",
-      String(limit),
-      name,
-      String(countryId),
-      String(regionId),
-    ],
+    queryKey: ["regions", String(limit), name, String(countryId), String(id)],
     queryFn: async () => {
       const params = new URLSearchParams(
         cleanupObject({
           limit,
           name,
           countryId,
-          regionId,
+          id,
         }),
       ).toString();
 
       const res = await (
         await fetch(
-          getBaseUrl() + "api/regions" + (params ? "&" + params : ""),
+          getBaseUrl() + "api/regions" + (params ? "?" + params : ""),
           {
             mode: "cors",
             method: "GET",
@@ -50,7 +42,7 @@ export default function getRegions({
         )
       ).json();
       if (res["error"]) throw new Error(res["error"]);
-      return regionsSchema.parse(res["data"]);
+      return regionsSchema.array().parse(res["data"]);
     },
     staleTime: 10000,
   });
