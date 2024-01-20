@@ -41,6 +41,7 @@ async function insertTestData() {
     slots: number;
     details: string;
     description: string;
+    imageUrl: string;
   }[] = [];
   regions.forEach((v) => {
     for (let i = 0; i < journeysCount; i++) {
@@ -52,6 +53,7 @@ async function insertTestData() {
         slots: 30,
         description: faker.lorem.slug(10),
         details: faker.lorem.slug(30),
+        imageUrl: faker.image.urlLoremFlickr({ category: "journey" }),
       });
     }
   });

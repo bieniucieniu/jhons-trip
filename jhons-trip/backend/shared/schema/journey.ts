@@ -10,6 +10,7 @@ export const journey = sqliteTable("journey", {
   end: integer("end").notNull(),
   slots: integer("slots").notNull(),
   booked: integer("booked").notNull().default(0),
+  imageUrl: text("image_url"),
   regionId: integer("region_id")
     .notNull()
     .references(() => region.id, {
