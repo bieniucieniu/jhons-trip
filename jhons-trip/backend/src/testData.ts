@@ -51,8 +51,8 @@ async function insertTestData() {
         end: end.getTime(),
         start: start.getTime(),
         slots: 30,
-        description: faker.lorem.slug(10),
-        details: faker.lorem.slug(30),
+        description: faker.lorem.words(10),
+        details: faker.lorem.words(30),
         imageUrl: faker.image.urlLoremFlickr({ category: "journey" }),
       });
     }
