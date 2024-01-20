@@ -1,12 +1,15 @@
 import getBaseUrl from "@/lib/getBaseUrl";
 import { useMutation } from "@tanstack/react-query";
+import { z } from "zod";
 
-export default function addRegions(
-  data: {
-    countryId: string;
-    name: string;
-  }[],
-) {
+const regionsSchema = z
+  .object({
+    name: z.string(),
+    countryId: z.number().int(),
+  })
+  .array();
+
+export default function addRegions(data: z.infer<typeof regionsSchema>) {
   return useMutation({
     mutationKey: ["regions"],
     mutationFn: async () => {

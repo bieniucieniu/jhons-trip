@@ -1,15 +1,19 @@
 import getBaseUrl from "@/lib/getBaseUrl";
 import { useMutation } from "@tanstack/react-query";
+import { z } from "zod";
 
-export default function addCoutries(
-  data: {
-    code: string;
-    name: string;
-  }[],
-) {
+const countriesSchema = z
+  .object({
+    name: z.string(),
+    code: z.string(),
+  })
+  .array();
+
+export default function addCoutries(data: z.infer<typeof countriesSchema>) {
   return useMutation({
     mutationKey: ["countries"],
     mutationFn: async () => {
+      countriesSchema.parse(data);
       const res = await (
         await fetch(getBaseUrl() + "api/countries", {
           mode: "cors",

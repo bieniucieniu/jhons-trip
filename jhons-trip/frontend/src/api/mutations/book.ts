@@ -1,17 +1,21 @@
 import getBaseUrl from "@/lib/getBaseUrl";
 import { useMutation } from "@tanstack/react-query";
+import { z } from "zod";
 
-export default function book(
-  data: {
-    for: number;
-    journeyName: string;
-    userId: number;
-    journeyId: number;
-  }[],
-) {
+const bookSchema = z
+  .object({
+    for: z.number().int(),
+    journeyName: z.string(),
+    userId: z.number().int(),
+    journeyId: z.number().int(),
+  })
+  .array();
+
+export default function book(data: z.infer<typeof bookSchema>) {
   return useMutation({
     mutationKey: ["journeys", "history"],
     mutationFn: async () => {
+      bookSchema.parse(data);
       const res = await (
         await fetch(getBaseUrl() + "api/book", {
           mode: "cors",
