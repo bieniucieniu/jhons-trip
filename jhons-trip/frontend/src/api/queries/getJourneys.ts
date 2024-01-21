@@ -31,9 +31,13 @@ export default function getJourneys({
   id,
   regionId,
   offset,
+  start,
+  end,
 }: {
   limit?: number;
   name?: string;
+  start?: number;
+  end?: number;
   regionId?: number;
   id?: number;
   offset?: number;
@@ -54,6 +58,8 @@ export default function getJourneys({
           regionId,
           id,
           offset,
+          start,
+          end,
         }),
       ).toString();
 

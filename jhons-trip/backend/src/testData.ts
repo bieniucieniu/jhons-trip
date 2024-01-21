@@ -8,7 +8,7 @@ const journeysCount = 3;
 
 async function insertTestData() {
   const c = Array.from({ length: countriesCount }).map(() => ({
-    name: faker.location.country(),
+    name: faker.location.country().toUpperCase(),
     code: faker.location.countryCode(),
   }));
   const countrys = await db.insert(country).values(c).returning();
@@ -21,7 +21,7 @@ async function insertTestData() {
   countrys.forEach((v) => {
     for (let i = 0; i < regionsCount; i++) {
       r.push({
-        name: faker.location.county(),
+        name: faker.location.county().toUpperCase(),
         countryId: v.id,
       });
     }
@@ -46,7 +46,7 @@ async function insertTestData() {
   regions.forEach((v) => {
     for (let i = 0; i < journeysCount; i++) {
       j.push({
-        name: faker.location.city(),
+        name: faker.location.city().toUpperCase(),
         regionId: v.id,
         end: end.getTime(),
         start: start.getTime(),

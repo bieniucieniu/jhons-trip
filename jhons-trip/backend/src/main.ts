@@ -2,13 +2,15 @@ import express from "express";
 import { AuthUser, authenticateToken, generateAccessToken } from "./auth";
 import { db } from "./db";
 import { country, journey, region } from "../shared/schema/journey";
-import { and, eq, like } from "drizzle-orm";
+import { and, eq, gt, like, lt } from "drizzle-orm";
 import path from "path";
 import { history, user } from "@/shared/schema/user";
 import cors from "cors";
 import cookieParser from "cookie-parser";
-
+import { asyncFilter } from "./utils";
 import { createInsertSchema } from "drizzle-zod";
+import { z } from "zod";
+
 const app = express();
 
 app.use(express.json(), cors(), cookieParser());
@@ -60,7 +62,7 @@ app.get("/api/countries", async (req, res) => {
       .select()
       .from(country)
       .limit(l)
-      .where(like(country.name, n));
+      .where(like(country.name, "%" + n + "%"));
     return res.json({ data });
   } catch (e) {
     res.status(406);
@@ -90,7 +92,7 @@ app.get("/api/regions", async (req, res) => {
       .limit(l)
       .where(
         and(
-          n ? like(region.name, n) : undefined,
+          n ? like(region.name, "%" + n + "%") : undefined,
           c ? eq(region.countryId, c) : undefined,
         ),
       );
@@ -103,7 +105,7 @@ app.get("/api/regions", async (req, res) => {
 
 app.get("/api/journeys", async (req, res) => {
   res.setHeader("Content-Type", "application/json");
-  const { limit, name, regionId, id, offset } = req.query;
+  const { limit, name, regionId, id, offset, start, end } = req.query;
 
   try {
     if (id) {
@@ -117,21 +119,29 @@ app.get("/api/journeys", async (req, res) => {
     }
 
     const l = limit ? Number(limit) : 10;
-    const n = name ? String(name) : undefined;
-    const r = regionId ? Number(regionId) : undefined;
+    const n = name ? String(name).toUpperCase() : undefined;
+    const r = regionId ? Number(regionId) : 1;
     const o = offset ? Number(offset) : undefined;
+    const s = start ? Number(start) : undefined;
+    const e = end ? Number(end) : undefined;
+
+    console.log({ l, n, r, o });
 
     const data = await db.query.journey.findMany({
       limit: l,
       offset: o,
       where: and(
-        n ? like(journey.name, n) : undefined,
+        n ? like(journey.name, "%" + n + "%") : undefined,
         r ? eq(journey.regionId, r) : undefined,
+        s ? gt(journey.start, s) : undefined,
+        e ? lt(journey.end, e) : undefined,
       ),
       with: {
         region: true,
       },
     });
+
+    console.log({ data });
 
     return res.json({ data });
   } catch (e) {
@@ -146,7 +156,7 @@ app.get("/api/history", async (req, res) => {
   if (!t) return res.status(401);
   const { limit, name, countryId } = req.query;
   const l = Number(limit) ?? 10;
-  const n = String(name);
+  const n = String(name).toUpperCase();
   const c = Number(countryId);
   try {
     const data = await db
@@ -156,7 +166,7 @@ app.get("/api/history", async (req, res) => {
       .where(
         and(
           eq(history.userId, t.userID),
-          n ? like(history.journeyName, n) : undefined,
+          n ? like(history.journeyName, "%" + n + "%") : undefined,
           c ? eq(history.journeyId, c) : undefined,
         ),
       );
@@ -207,7 +217,9 @@ app.post("/api/signin", async (req, res) => {
   }
 });
 
-const insertCountriesSchema = createInsertSchema(country).array();
+const insertCountriesSchema = createInsertSchema(country, {
+  name: z.string().toUpperCase(),
+}).array();
 
 app.post("/api/countries", async (req, res) => {
   res.setHeader("Content-Type", "application/json");
@@ -231,7 +243,9 @@ app.post("/api/countries", async (req, res) => {
   }
 });
 
-const insertRegionsSchema = createInsertSchema(region).array();
+const insertRegionsSchema = createInsertSchema(region, {
+  name: z.string().toUpperCase(),
+}).array();
 
 app.post("/api/regions", async (req, res) => {
   res.setHeader("Content-Type", "application/json");
@@ -255,7 +269,9 @@ app.post("/api/regions", async (req, res) => {
   }
 });
 
-const insertJourneysSchema = createInsertSchema(journey).array();
+const insertJourneysSchema = createInsertSchema(journey, {
+  name: z.string().toUpperCase(),
+}).array();
 
 app.post("/api/journeys", async (req, res) => {
   res.setHeader("Content-Type", "application/json");
