@@ -62,7 +62,7 @@ export type User =
   | undefined;
 
 export async function getUser(
-  callback?: (res: { user?: User; error?: any }) => void,
+  callback?: (res: { user?: User; error?: any } | undefined) => void,
 ) {
   try {
     const res = await fetch(getBaseUrl() + "api/auth", {
@@ -80,6 +80,7 @@ export async function getUser(
     if (callback !== undefined) callback(body);
     return body;
   } catch (e) {
+    if (callback !== undefined) callback(undefined);
     console.log(e);
   }
 }

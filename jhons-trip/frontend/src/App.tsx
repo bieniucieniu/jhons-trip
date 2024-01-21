@@ -17,7 +17,7 @@ export default function App() {
     useState<Partial<Awaited<ReturnType<typeof getUser>>>>(undefined);
   useEffect(() => {
     getUser((u) => setUser(u));
-  });
+  }, []);
   return (
     <QueryClientProvider client={queryClient}>
       <Switch>
@@ -38,7 +38,14 @@ export default function App() {
           {user ? (
             <>
               <CardTitle>loged as {user?.user?.username}</CardTitle>
-              <Button onClick={() => logout()}>logout</Button>
+              <Button
+                onClick={() => {
+                  logout();
+                  setUser(undefined);
+                }}
+              >
+                logout
+              </Button>
             </>
           ) : (
             <Button variant="link">

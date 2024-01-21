@@ -56,7 +56,7 @@ export default function Book({
   useEffect(() => {
     getUser((u) => {
       setUser(u);
-      dispatch({ type: "userID", value: u.user?.userID });
+      dispatch({ type: "userID", value: u?.user?.userID });
     });
   }, []);
   const bookMutation = book();
