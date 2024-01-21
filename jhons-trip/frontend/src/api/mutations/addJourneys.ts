@@ -22,6 +22,9 @@ export default function addJourneys(data: z.infer<typeof journeysSchema>) {
       journeysSchema.parse(data);
       const res = await (
         await fetch(getBaseUrl() + "api/journeys", {
+          headers: {
+            "Content-Type": "application/json",
+          },
           mode: "cors",
           method: "POST",
           body: JSON.stringify({ data }),

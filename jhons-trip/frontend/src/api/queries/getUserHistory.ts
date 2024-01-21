@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import getBaseUrl from "@/lib/getBaseUrl";
 import cleanupObject from "@/lib/cleanupObject";
 import { z } from "zod";
+import { journeysSchema } from "./getJourneys";
 
 const userHistorySchema = z.object({
   id: z.number().int(),
@@ -9,6 +10,7 @@ const userHistorySchema = z.object({
   journeyName: z.string(),
   userId: z.number().int(),
   journeyId: z.number().int(),
+  journey: journeysSchema.omit({ region: true }).optional(),
 });
 
 export default function getUserHistory({
@@ -23,7 +25,7 @@ export default function getUserHistory({
   offset?: number;
 }) {
   return useQuery({
-    queryKey: ["countries"],
+    queryKey: ["history", limit, name, journeyId, offset],
     queryFn: async () => {
       const params = new URLSearchParams(
         cleanupObject({
@@ -36,7 +38,7 @@ export default function getUserHistory({
 
       const res = await (
         await fetch(
-          getBaseUrl() + "api/countries" + params ? "?" + params : "",
+          getBaseUrl() + "api/history" + (params ? "?" + params : ""),
           {
             mode: "cors",
             method: "GET",

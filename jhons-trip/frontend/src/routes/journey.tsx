@@ -1,4 +1,5 @@
 import getJourneys from "@/api/queries/getJourneys";
+import Book from "@/components/book";
 import JourneyDisplay from "@/components/journeyDisplay";
 import { useParams } from "wouter";
 
@@ -21,6 +22,7 @@ export default function Journey() {
   return (
     <main className="m-auto max-w-screen-lg py-10">
       <JourneyDisplay {...data[0]} />
+      <Book id={data[0].id} name={data[0].name} />
     </main>
   );
 }

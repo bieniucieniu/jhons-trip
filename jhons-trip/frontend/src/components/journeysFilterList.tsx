@@ -93,7 +93,7 @@ export default function JourneysFilterList({
                   type="text"
                   id="name"
                   placeholder="name"
-                  value={f.name ?? ""}
+                  value={f?.name ?? ""}
                 />
               </div>
             </li>
@@ -110,7 +110,7 @@ export default function JourneysFilterList({
                       value: e.target.valueAsDate,
                     })
                   }
-                  value={f.start ? format(f.start, "yyyy-MM-dd") : undefined}
+                  value={f?.start ? format(f.start, "yyyy-MM-dd") : undefined}
                   id="start"
                   type="date"
                   placeholder="start"
@@ -130,7 +130,7 @@ export default function JourneysFilterList({
                     })
                   }
                   id="end"
-                  value={f.end ? format(f.end, "yyyy-MM-dd") : undefined}
+                  value={f?.end ? format(f.end, "yyyy-MM-dd") : undefined}
                   type="date"
                   placeholder="end"
                 />
@@ -138,7 +138,10 @@ export default function JourneysFilterList({
             </li>
           </ul>
           <div className="flex gap-x-2 pt-2">
-            <Button onClick={() => dispatch({ type: "reset" })}>
+            <Button
+              variant="destructive"
+              onClick={() => dispatch({ type: "reset" })}
+            >
               reset all
             </Button>
           </div>

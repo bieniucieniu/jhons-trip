@@ -3,6 +3,8 @@ import { Redirect, Route, Switch } from "wouter";
 import Root from "@/routes/root";
 import Journey from "@/routes/journey";
 import Browse from "./routes/browse";
+import Login from "./routes/login";
+import History from "./routes/history";
 
 const queryClient = new QueryClient();
 
@@ -16,6 +18,8 @@ export default function App() {
         <Route path="/browse">
           <Redirect to="/browse/1" />;
         </Route>
+        <Route path="/login" component={Login} />
+        <Route path="/history" component={History} />
         <Route>
           <main className="flex justify-center items-center">404</main>
         </Route>

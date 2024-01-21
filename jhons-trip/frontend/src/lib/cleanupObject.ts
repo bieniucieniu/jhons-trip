@@ -1,7 +1,7 @@
 export default function cleanupObject(obj: {
   [k: string]: string | number | boolean | undefined;
 }): { [k: string]: string } {
-  console.log(obj);
+  if (!obj) return {};
   return Object.fromEntries(
     Object.entries(obj)
       .filter(([_, v]) => v != undefined)

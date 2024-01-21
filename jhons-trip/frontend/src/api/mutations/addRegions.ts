@@ -15,6 +15,9 @@ export default function addRegions(data: z.infer<typeof regionsSchema>) {
     mutationFn: async () => {
       const res = await (
         await fetch(getBaseUrl() + "api/regions", {
+          headers: {
+            "Content-Type": "application/json",
+          },
           mode: "cors",
           method: "POST",
           body: JSON.stringify({ data }),

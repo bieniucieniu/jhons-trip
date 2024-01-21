@@ -3,7 +3,7 @@ import getBaseUrl from "@/lib/getBaseUrl";
 import cleanupObject from "@/lib/cleanupObject";
 import { z } from "zod";
 
-const journeysSchema = z.object({
+export const journeysSchema = z.object({
   id: z.number().int(),
   name: z.string(),
   description: z.string(),
