@@ -120,12 +120,10 @@ app.get("/api/journeys", async (req, res) => {
 
     const l = limit ? Number(limit) : 10;
     const n = name ? String(name).toUpperCase() : undefined;
-    const r = regionId ? Number(regionId) : 1;
+    const r = regionId ? Number(regionId) : undefined;
     const o = offset ? Number(offset) : undefined;
     const s = start ? Number(start) : undefined;
     const e = end ? Number(end) : undefined;
-
-    console.log({ l, n, r, o });
 
     const data = await db.query.journey.findMany({
       limit: l,
@@ -140,8 +138,6 @@ app.get("/api/journeys", async (req, res) => {
         region: true,
       },
     });
-
-    console.log({ data });
 
     return res.json({ data });
   } catch (e) {

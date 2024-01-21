@@ -20,7 +20,7 @@ export default function JourneysList({
       </div>
     );
   if (isLoading) return <div>{status}</div>;
-  if (!data?.length) <div>no more data</div>;
+  if (!data || data.length === 0) <div>no more data</div>;
   return (
     <ul className={className}>
       {data?.map(({ details: _, ...props }) => (

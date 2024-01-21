@@ -1,4 +1,4 @@
-import { useReducer, useState } from "react";
+import { useEffect, useReducer } from "react";
 import JourneysList from "./journeysList";
 
 import type getJourneys from "@/api/queries/getJourneys";
@@ -6,30 +6,38 @@ import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { Label } from "@radix-ui/react-label";
+import cleanupObject from "@/lib/cleanupObject";
+import { useLocation } from "wouter";
+import { format } from "date-fns";
+import { getParamsObject } from "@/lib/utils";
 
 type Filters = Omit<Parameters<typeof getJourneys>[0], ""> & {
   countryId?: number;
 };
 type FiltersActions =
-  | { type: "region"; value?: number }
-  | { type: "country"; value?: number }
+  | { type: "regionId"; value?: number }
+  | { type: "countryId"; value?: number }
   | { type: "name"; value?: string }
   | { type: "start"; value?: Date | null }
   | { type: "end"; value?: Date | null }
   | { type: "reset" };
 function FiltersReducer(state: Filters, action: FiltersActions): Filters {
+  if (action.type !== "reset" && action.value === null) {
+    state[action.type] = undefined;
+    return { ...state };
+  }
   switch (action.type) {
     case "name":
       return {
         ...state,
         name: action.value,
       };
-    case "region":
+    case "regionId":
       return {
         ...state,
         regionId: action.value,
       };
-    case "country":
+    case "countryId":
       return {
         ...state,
         countryId: action.value,
@@ -57,11 +65,16 @@ export default function JourneysFilterList({
     offset?: number;
   };
 }) {
-  const [f, dispatch] = useReducer(FiltersReducer, {});
-  const [fOut, setFOut] = useState<Filters>({});
+  const [location, setLocation] = useLocation();
+  console.log(location, window.location.search);
+  const [f, dispatch] = useReducer(FiltersReducer, getParamsObject());
+  useEffect(() => {
+    const p = new URLSearchParams(cleanupObject(f)).toString();
+    setLocation(location.split("?")[0] + "?" + p);
+  }, [f]);
 
   return (
-    <>
+    <div className="grid grid-cols-2 items-start gap-6">
       <Card className="mb-10">
         <CardHeader>
           <CardTitle>Filters</CardTitle>
@@ -82,16 +95,6 @@ export default function JourneysFilterList({
                   placeholder="name"
                   value={f.name ?? ""}
                 />
-                <Button
-                  onClick={() =>
-                    dispatch({
-                      type: "start",
-                      value: undefined,
-                    })
-                  }
-                >
-                  reset
-                </Button>
               </div>
             </li>
             <li>
@@ -107,20 +110,11 @@ export default function JourneysFilterList({
                       value: e.target.valueAsDate,
                     })
                   }
+                  value={f.start ? format(f.start, "yyyy-MM-dd") : undefined}
                   id="start"
                   type="date"
                   placeholder="start"
                 />
-                <Button
-                  onClick={() =>
-                    dispatch({
-                      type: "start",
-                      value: undefined,
-                    })
-                  }
-                >
-                  reset
-                </Button>
               </div>
             </li>
             <li>
@@ -136,19 +130,10 @@ export default function JourneysFilterList({
                     })
                   }
                   id="end"
+                  value={f.end ? format(f.end, "yyyy-MM-dd") : undefined}
                   type="date"
                   placeholder="end"
                 />
-                <Button
-                  onClick={() =>
-                    dispatch({
-                      type: "start",
-                      value: undefined,
-                    })
-                  }
-                >
-                  reset
-                </Button>
               </div>
             </li>
           </ul>
@@ -156,14 +141,13 @@ export default function JourneysFilterList({
             <Button onClick={() => dispatch({ type: "reset" })}>
               reset all
             </Button>
-            <Button onClick={() => setFOut(f)}>filter</Button>
           </div>
         </CardContent>
       </Card>
       <JourneysList
-        className="flex flex-col items-center gap-6"
-        query={{ ...fOut, ...filters }}
+        className="flex flex-col items-center gap-6 min-w-[756px]"
+        query={{ ...f, ...filters }}
       ></JourneysList>
-    </>
+    </div>
   );
 }
