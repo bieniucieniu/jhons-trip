@@ -1,6 +1,7 @@
 import { country, journey, region } from "@/shared/schema/journey";
 import { db } from "./db";
 import { faker } from "@faker-js/faker";
+import { user } from "@/shared/schema/user";
 
 const countriesCount = 5;
 const regionsCount = 4;
@@ -59,7 +60,20 @@ async function insertTestData() {
   });
 
   await db.insert(journey).values(j);
+
+  await db.insert(user).values([
+    {
+      password: "admin",
+      username: "admin",
+      privilege: 100,
+    },
+    {
+      password: "sample",
+      username: "sample",
+    },
+  ]);
 }
+
 try {
   insertTestData();
 } catch (e) {
