@@ -341,7 +341,6 @@ app.post("/api/book", async (req, res) => {
         rejected,
       });
 
-    console.log("sdasd2");
     res.status(200);
     return res.json({
       success: true,
@@ -363,6 +362,7 @@ app.post("/api/cancel", async (req, res) => {
     return;
   }
   const { id } = req.body;
+  console.log({ id });
   try {
     const i = z.number().parse(id);
 
@@ -385,12 +385,18 @@ app.post("/api/cancel", async (req, res) => {
         .set({
           booked: j[0].booked > d[0].for ? j[0].booked - d[0].for : 0,
         })
-        .where(eq(history.id, i));
+        .where(eq(journey.id, d[0].id));
 
+      await db
+        .delete(history)
+        .where(and(eq(history.id, i), eq(history.userId, t.userID)));
       res.status(200);
       return res.json({ return: r });
     }
+    res.status(500);
+    return;
   } catch (e) {
+    console.log(e);
     res.status(406);
     return res.json({
       error: e,

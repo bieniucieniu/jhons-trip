@@ -1,14 +1,23 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { Redirect, Route, Switch } from "wouter";
+import { Link, Redirect, Route, Switch } from "wouter";
 import Root from "@/routes/root";
 import Journey from "@/routes/journey";
 import Browse from "./routes/browse";
 import Login from "./routes/login";
 import History from "./routes/history";
+import { useEffect, useState } from "react";
+import { getUser, logout } from "./api/userAuth";
+import { Card, CardHeader, CardTitle } from "./components/ui/card";
+import { Button } from "./components/ui/button";
 
 const queryClient = new QueryClient();
 
 export default function App() {
+  const [user, setUser] =
+    useState<Partial<Awaited<ReturnType<typeof getUser>>>>(undefined);
+  useEffect(() => {
+    getUser((u) => setUser(u));
+  });
   return (
     <QueryClientProvider client={queryClient}>
       <Switch>
@@ -24,6 +33,20 @@ export default function App() {
           <main className="flex justify-center items-center">404</main>
         </Route>
       </Switch>
+      <Card className="absolute top-0 right-0 rounded-r-none rounded-t-none">
+        <CardHeader>
+          {user ? (
+            <>
+              <CardTitle>loged as {user?.user?.username}</CardTitle>
+              <Button onClick={() => logout()}>logout</Button>
+            </>
+          ) : (
+            <Button variant="link">
+              <Link href="/login">login/signin</Link>
+            </Button>
+          )}
+        </CardHeader>
+      </Card>
     </QueryClientProvider>
   );
 }
