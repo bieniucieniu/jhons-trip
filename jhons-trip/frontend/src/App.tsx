@@ -35,7 +35,7 @@ export default function App() {
       </Switch>
       <Card className="absolute top-0 right-0 rounded-r-none rounded-t-none">
         <CardHeader>
-          {user ? (
+          {user && user.user ? (
             <>
               <CardTitle>loged as {user?.user?.username}</CardTitle>
               <Button
