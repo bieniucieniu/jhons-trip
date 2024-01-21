@@ -7,7 +7,7 @@
   "license": "ISC",
   "scripts": {
     "run": "tsx ./src/main.ts",
-    "dev": "tsx ./src/main.ts"
+    "testData": "tsx ./src/testData.ts"
   },
   "devDependencies": {
     "drizzle-kit": "^0.20.13",
