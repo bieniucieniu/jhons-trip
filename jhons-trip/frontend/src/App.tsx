@@ -1,25 +1,18 @@
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Link, Redirect, Route, Switch } from "wouter";
 import Root from "@/routes/root";
 import Journey from "@/routes/journey";
 import Browse from "./routes/browse";
 import Login from "./routes/login";
 import History from "./routes/history";
-import { useEffect, useState } from "react";
-import { getUser, logout } from "./api/userAuth";
+import { logout } from "./api/userAuth";
 import { Card, CardHeader, CardTitle } from "./components/ui/card";
 import { Button } from "./components/ui/button";
-
-const queryClient = new QueryClient();
+import useGetUser from "./api/queries/user";
 
 export default function App() {
-  const [user, setUser] =
-    useState<Partial<Awaited<ReturnType<typeof getUser>>>>(undefined);
-  useEffect(() => {
-    getUser((u) => setUser(u));
-  }, []);
+  const user = useGetUser();
   return (
-    <QueryClientProvider client={queryClient}>
+    <>
       <Switch>
         <Route path="/" component={Root} />
         <Route path="/journey/:id" component={Journey} />
@@ -35,13 +28,13 @@ export default function App() {
       </Switch>
       <Card className="absolute top-0 right-0 rounded-r-none rounded-t-none">
         <CardHeader>
-          {user && user.user ? (
+          {user && user.data ? (
             <>
-              <CardTitle>loged as {user?.user?.username}</CardTitle>
+              <CardTitle>loged as {user?.data.username}</CardTitle>
               <Button
                 onClick={() => {
                   logout();
-                  setUser(undefined);
+                  user.refetch();
                 }}
               >
                 logout
@@ -54,6 +47,6 @@ export default function App() {
           )}
         </CardHeader>
       </Card>
-    </QueryClientProvider>
+    </>
   );
 }
