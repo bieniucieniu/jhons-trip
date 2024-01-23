@@ -1,9 +1,10 @@
-import { genUser, getUser, login } from "@/api/userAuth";
+import { genUser, login } from "@/api/userAuth";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@radix-ui/react-label";
-import { useEffect, useReducer, useState } from "react";
+import { useReducer, useState } from "react";
+import useGetUser from "@/api/queries/user";
 
 type Inputs = {
   username?: string;
@@ -45,16 +46,12 @@ export default function Login() {
     message: "",
     error: undefined,
   });
-  const [user, setUser] =
-    useState<Partial<Awaited<ReturnType<typeof getUser>>>>(undefined);
-  useEffect(() => {
-    getUser((u) => setUser(u));
-  }, []);
+  const user = useGetUser();
 
-  if (user?.user)
+  if (user?.data)
     return (
       <div>
-        <h1>hello {user.user.username}</h1>
+        <h1>hello {user.data.username}</h1>
       </div>
     );
 
@@ -135,7 +132,7 @@ export default function Login() {
                   return;
                 }
                 document.cookie = "token=" + e.token + "; ";
-                document.location.reload();
+                user.refetch();
               });
             }}
           >

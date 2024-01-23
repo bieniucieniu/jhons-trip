@@ -1,4 +1,4 @@
-import getJourneys from "@/api/queries/getJourneys";
+import getJourneys from "@/api/queries/journeys";
 import Book from "@/components/book";
 import JourneyDisplay from "@/components/journeyDisplay";
 import { useParams } from "wouter";

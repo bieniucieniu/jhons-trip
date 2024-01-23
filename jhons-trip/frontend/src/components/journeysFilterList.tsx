@@ -1,7 +1,7 @@
 import { useEffect, useReducer } from "react";
 import JourneysList from "./journeysList";
 
-import type getJourneys from "@/api/queries/getJourneys";
+import type getJourneys from "@/api/queries/journeys";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";

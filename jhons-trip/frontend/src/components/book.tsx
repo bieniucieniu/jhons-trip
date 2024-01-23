@@ -1,17 +1,16 @@
 import { z } from "zod";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
-import book, { bookSchema } from "@/api/mutations/book";
-import { useEffect, useReducer, useState } from "react";
-import { getUser } from "@/api/userAuth";
+import { useBook, bookSchema } from "@/api/mutations/book";
+import { useReducer } from "react";
 import { Label } from "@radix-ui/react-label";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { Link } from "wouter";
+import useGetUser from "@/api/queries/user";
 type Inputs = z.infer<typeof bookSchema>;
 type Actions =
   | { type: "for"; value?: number }
-  | { type: "journeyName"; value?: string }
-  | { type: "userID"; value?: number };
+  | { type: "journeyName"; value?: string };
 
 function UserInputReducer(
   state: Partial<Inputs>,
@@ -28,11 +27,6 @@ function UserInputReducer(
         ...state,
         journeyName: action.value,
       };
-    case "userID":
-      return {
-        ...state,
-        userId: action.value,
-      };
   }
 }
 
@@ -45,32 +39,22 @@ export default function Book({
   id: number;
   name: string;
 }) {
-  const [user, setUser] =
-    useState<Partial<Awaited<ReturnType<typeof getUser>>>>(undefined);
   const [f, dispatch] = useReducer(UserInputReducer, {
     for: 1,
     journeyName: name,
     userId: undefined,
     journeyId: id,
   });
-  useEffect(() => {
-    getUser((u) => {
-      setUser(u);
-      dispatch({ type: "userID", value: u?.user?.userID });
-    });
-  }, []);
-  const bookMutation = book();
-
+  const user = useGetUser();
+  const bookMutation = useBook();
   if (!user) return <div>no user</div>;
-  if (!user.user)
+  if (!user.data)
     return (
       <div>
-        {user.error ? (
-          <Button variant="link">
-            <Link href="/login">login / signin</Link>
-            {user.error}
-          </Button>
-        ) : null}
+        {user.error ? <p>{user.error.message}</p> : null}
+        <Button variant="link">
+          <Link href="/login">login / signin</Link>
+        </Button>
       </div>
     );
   if (!id) return <div>error no id provided</div>;
@@ -127,7 +111,7 @@ export default function Book({
           </li>
           <Button
             disabled={bookMutation.isPending}
-            onClick={() => bookMutation.mutate([f])}
+            onClick={() => bookMutation.mutate([{ ...f, userId: 0 }])}
           >
             book
           </Button>

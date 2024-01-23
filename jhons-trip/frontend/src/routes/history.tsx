@@ -1,5 +1,5 @@
-import cancelJourney from "@/api/mutations/cancelJourney";
-import getUserHistory from "@/api/queries/getUserHistory";
+import { useCancelJourney } from "@/api/mutations/book";
+import getUserHistory from "@/api/queries/userHistory";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -20,7 +20,7 @@ function Tile({
   setLock: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
   if (!d) return null;
-  const cancel = cancelJourney();
+  const cancel = useCancelJourney();
   const [cancelEnable, setCancelEnable] = useState<boolean>(false);
   const [deleted, setDeleted] = useState<boolean>(false);
 

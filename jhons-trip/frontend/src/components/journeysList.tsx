@@ -1,4 +1,4 @@
-import getJourneys from "@/api/queries/getJourneys";
+import getJourneys from "@/api/queries/journeys";
 import { Link } from "wouter";
 import JourneyDisplay from "./journeyDisplay";
 import { Card } from "./ui/card";

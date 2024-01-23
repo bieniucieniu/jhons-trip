@@ -1,3 +1,4 @@
+import getLimit from "@/api/queries/limit";
 import JourneysFilterList from "@/components/journeysFilterList";
 import {
   Pagination,
@@ -8,9 +9,14 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
-import { Redirect, useParams } from "wouter";
+import { Redirect, useLocation, useParams } from "wouter";
 export default function Browse() {
+  const [_, setLocation] = useLocation();
   const { page } = useParams();
+  const { data: limit, status } = getLimit("joutney");
+  const maxPage: number =
+    status === "success" && limit ? Math.ceil(limit.valueOf() / 20) : Infinity;
+
   if (!page) return <Redirect to="/browse/1" />;
   const p = Number(page);
   if (p < 1) return <Redirect to="/browse/1" />;
@@ -20,11 +26,11 @@ export default function Browse() {
         <PaginationContent>
           {p > 1 ? (
             <>
-              <PaginationItem>
-                <PaginationPrevious href={"/browse/" + (p - 1)} />
-              </PaginationItem>
               {p > 2 ? (
                 <>
+                  <PaginationItem>
+                    <PaginationPrevious href={"/browse/" + (p - 1)} />
+                  </PaginationItem>
                   <PaginationItem>
                     <PaginationEllipsis />
                   </PaginationItem>
@@ -37,21 +43,42 @@ export default function Browse() {
               </PaginationItem>
             </>
           ) : null}
-
           <PaginationItem>
             <PaginationLink href="#" isActive>
               {p}
             </PaginationLink>
           </PaginationItem>
-          <PaginationItem>
-            <PaginationLink href={"/browse/" + (p + 1)}>{p + 1}</PaginationLink>
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationEllipsis />
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationNext href={"/browse/" + (p + 1)} />
-          </PaginationItem>
+          {maxPage > p ? (
+            <>
+              <PaginationItem>
+                <PaginationLink
+                  onClick={() => {
+                    setLocation(
+                      "/browse/" + (p + 1) + document.location.search,
+                    );
+                  }}
+                >
+                  {p + 1}
+                </PaginationLink>
+              </PaginationItem>
+              {maxPage > p + 1 ? (
+                <>
+                  <PaginationItem>
+                    <PaginationEllipsis />
+                  </PaginationItem>
+                  <PaginationItem>
+                    <PaginationNext
+                      onClick={() => {
+                        setLocation(
+                          "/browse/" + (p + 1) + document.location.search,
+                        );
+                      }}
+                    />
+                  </PaginationItem>
+                </>
+              ) : null}
+            </>
+          ) : null}
         </PaginationContent>
       </Pagination>
 
@@ -65,18 +92,30 @@ export default function Browse() {
         <PaginationContent>
           {p > 1 ? (
             <>
-              <PaginationItem>
-                <PaginationPrevious href={"/browse/" + (p - 1)} />
-              </PaginationItem>
               {p > 2 ? (
                 <>
+                  <PaginationItem>
+                    <PaginationPrevious
+                      onClick={() => {
+                        setLocation(
+                          "/browse/" + (p - 1) + document.location.search,
+                        );
+                      }}
+                    />
+                  </PaginationItem>
                   <PaginationItem>
                     <PaginationEllipsis />
                   </PaginationItem>
                 </>
               ) : null}
               <PaginationItem>
-                <PaginationLink href={"/browse/" + (p - 1)}>
+                <PaginationLink
+                  onClick={() => {
+                    setLocation(
+                      "/browse/" + (p - 1) + document.location.search,
+                    );
+                  }}
+                >
                   {p - 1}
                 </PaginationLink>
               </PaginationItem>
@@ -88,15 +127,37 @@ export default function Browse() {
               {p}
             </PaginationLink>
           </PaginationItem>
-          <PaginationItem>
-            <PaginationLink href={"/browse/" + (p + 1)}>{p + 1}</PaginationLink>
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationEllipsis />
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationNext href={"/browse/" + (p + 1)} />
-          </PaginationItem>
+          {maxPage > p ? (
+            <>
+              <PaginationItem>
+                <PaginationLink
+                  onClick={() => {
+                    setLocation(
+                      "/browse/" + (p + 1) + document.location.search,
+                    );
+                  }}
+                >
+                  {p + 1}
+                </PaginationLink>
+              </PaginationItem>
+              {maxPage > p + 1 ? (
+                <>
+                  <PaginationItem>
+                    <PaginationEllipsis />
+                  </PaginationItem>
+                  <PaginationItem>
+                    <PaginationNext
+                      onClick={() => {
+                        setLocation(
+                          "/browse/" + (p + 1) + document.location.search,
+                        );
+                      }}
+                    />
+                  </PaginationItem>
+                </>
+              ) : null}
+            </>
+          ) : null}
         </PaginationContent>
       </Pagination>
     </div>
