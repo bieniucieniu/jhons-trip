@@ -25,7 +25,7 @@ export const journeysSchema = z.object({
 
 export type Journey = z.infer<typeof journeysSchema>;
 
-export default function getJourneys({
+export default function useGetJourneys({
   limit,
   name,
   id,
@@ -77,6 +77,6 @@ export default function getJourneys({
       if (res["error"]) throw new Error(res["error"]);
       return journeysSchema.array().parse(res["data"]);
     },
-    staleTime: 10000,
+    staleTime: 1000 * 60 * 60,
   });
 }

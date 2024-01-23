@@ -3,33 +3,30 @@ import getBaseUrl from "@/lib/getBaseUrl";
 import cleanupObject from "@/lib/cleanupObject";
 import { z } from "zod";
 
-const regionsSchema = z.object({
+const countriesSchema = z.object({
   id: z.number().int(),
   name: z.string(),
-  countryId: z.number().int(),
+  code: z.string(),
 });
 
-export default function getRegions({
+export default function useGetCoutries({
   limit,
   name,
-  countryId,
   id,
   offset,
 }: {
   limit?: number;
   name?: string;
-  countryId?: number;
   id?: number;
   offset?: number;
 }) {
   return useQuery({
-    queryKey: ["regions", "limit" + limit, name, "country" + countryId],
+    queryKey: ["countries", "limit" + limit, name],
     queryFn: async () => {
       const params = new URLSearchParams(
         cleanupObject({
           limit,
           name,
-          countryId,
           id,
           offset,
         }),
@@ -37,7 +34,7 @@ export default function getRegions({
 
       const res = await (
         await fetch(
-          getBaseUrl() + "api/regions" + (params ? "?" + params : ""),
+          getBaseUrl() + "api/countries" + (params ? "?" + params : ""),
           {
             mode: "cors",
             method: "GET",
@@ -45,8 +42,8 @@ export default function getRegions({
         )
       ).json();
       if (res["error"]) throw new Error(res["error"]);
-      return regionsSchema.array().parse(res["data"]);
+      return countriesSchema.array().parse(res["data"]);
     },
-    staleTime: 10000,
+    staleTime: 1000 * 60 * 60,
   });
 }
