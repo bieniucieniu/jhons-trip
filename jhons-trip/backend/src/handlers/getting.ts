@@ -1,5 +1,5 @@
 import type { Express } from "express";
-import { and, eq, gt, like, lt } from "drizzle-orm";
+import { and, count, eq, gt, like, lt } from "drizzle-orm";
 import { country, journey, region } from "../../shared/schema/journey";
 import { history } from "@/shared/schema/user";
 import { db } from "../db";
@@ -139,6 +139,40 @@ export default function AppendGettingHandlers(app: Express) {
     } catch (e) {
       res.status(406);
       return res.json({ error: e });
+    }
+  });
+
+  const tablesMap = [
+    { name: "country", table: country },
+    { name: "journey", table: journey },
+    { name: "region", table: region },
+  ];
+  app.get("/api/limit", async (req, res) => {
+    res.setHeader("Content-Type", "application/json");
+    const { table } = req.query;
+
+    const tableName = table ? String(table) : "";
+    const t = tablesMap.find(({ name }) => name !== tableName);
+    if (!t) {
+      res.status(400);
+      res.json({
+        error: "incorect table name: '" + tableName + "'",
+      });
+      return;
+    }
+    try {
+      const data = await db.select({ value: count() }).from(t.table);
+
+      res.status(200);
+      res.json(data[0]);
+    } catch (e) {
+      if (!table) {
+        res.status(400);
+        res.json({
+          error: e,
+        });
+        return;
+      }
     }
   });
 
