@@ -1,12 +1,12 @@
 import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
-import { journey } from "./journey";
+import { journey, region } from "./journey";
 import { relations } from "drizzle-orm";
 
 export const user = sqliteTable("user", {
   id: integer("id").primaryKey(),
   privilege: integer("privilege").notNull().default(0),
   username: text("username").notNull().unique(),
-  password: text("username").notNull(),
+  password: text("password").notNull(),
 });
 
 export const history = sqliteTable("history", {
@@ -42,6 +42,13 @@ export const comment = sqliteTable("comment", {
       onDelete: "cascade",
       onUpdate: "cascade",
     }),
+  regionId: integer("region_id")
+    .notNull()
+    .references(() => region.id, {
+      onDelete: "cascade",
+      onUpdate: "cascade",
+    }),
+
   historyId: integer("history_id")
     .notNull()
     .references(() => journey.id, {
@@ -83,5 +90,9 @@ export const commentRelation = relations(comment, ({ one }) => ({
   history: one(history, {
     fields: [comment.historyId],
     references: [history.id],
+  }),
+  region: one(region, {
+    fields: [comment.regionId],
+    references: [region.id],
   }),
 }));
