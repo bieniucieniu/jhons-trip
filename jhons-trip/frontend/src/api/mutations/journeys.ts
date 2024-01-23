@@ -2,20 +2,26 @@ import getBaseUrl from "@/lib/getBaseUrl";
 import { useMutation } from "@tanstack/react-query";
 import { z } from "zod";
 
-const countriesSchema = z
+const journeysSchema = z
   .object({
     name: z.string(),
-    code: z.string(),
+    description: z.string(),
+    details: z.string(),
+    start: z.number().int(),
+    end: z.number().int(),
+    slots: z.number().int(),
+    regionId: z.number().int(),
+    countryId: z.number().int(),
   })
   .array();
 
-export default function addCoutries(data: z.infer<typeof countriesSchema>) {
+export function useAddJourneys(data: z.infer<typeof journeysSchema>) {
   return useMutation({
-    mutationKey: ["countries"],
+    mutationKey: ["journeys"],
     mutationFn: async () => {
-      countriesSchema.parse(data);
+      journeysSchema.parse(data);
       const res = await (
-        await fetch(getBaseUrl() + "api/countries", {
+        await fetch(getBaseUrl() + "api/journeys", {
           headers: {
             "Content-Type": "application/json",
           },

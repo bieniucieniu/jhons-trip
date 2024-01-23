@@ -52,35 +52,3 @@ export async function login(
 export function logout() {
   document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 GMT";
 }
-
-export type User =
-  | {
-      username: string;
-      userID: number;
-      privilege: number;
-    }
-  | undefined;
-
-export async function getUser(
-  callback?: (res: { user?: User; error?: any } | undefined) => void,
-) {
-  try {
-    const res = await fetch(getBaseUrl() + "api/auth", {
-      method: "GET",
-      mode: "cors",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-    const body = (await res.json()) as {
-      user: User;
-      error: any;
-    };
-
-    if (callback !== undefined) callback(body);
-    return body;
-  } catch (e) {
-    if (callback !== undefined) callback(undefined);
-    console.log(e);
-  }
-}

@@ -9,7 +9,7 @@ const regionsSchema = z
   })
   .array();
 
-export default function addRegions(data: z.infer<typeof regionsSchema>) {
+export function useAddRegions(data: z.infer<typeof regionsSchema>) {
   return useMutation({
     mutationKey: ["regions"],
     mutationFn: async () => {
