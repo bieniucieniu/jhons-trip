@@ -1,6 +1,6 @@
 import { relations } from "drizzle-orm";
 import { sqliteTable, integer, text } from "drizzle-orm/sqlite-core";
-import { history } from "./user";
+import { comment, history } from "./user";
 
 export const journey = sqliteTable("journey", {
   id: integer("id").primaryKey(),
@@ -11,6 +11,7 @@ export const journey = sqliteTable("journey", {
   end: integer("end").notNull(),
   slots: integer("slots").notNull(),
   booked: integer("booked").notNull().default(0),
+  price: integer("price").notNull(),
   imageUrl: text("image_url"),
   regionId: integer("region_id")
     .notNull()
@@ -54,4 +55,5 @@ export const journeyRelation = relations(journey, ({ one, many }) => ({
     references: [region.id],
   }),
   history: many(history),
+  comment: many(comment),
 }));
