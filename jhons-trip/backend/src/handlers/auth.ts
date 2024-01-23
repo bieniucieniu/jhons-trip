@@ -15,18 +15,22 @@ export default function AppendAuthHandlers(app: Express) {
     res.setHeader("Content-Type", "application/json");
     const { username, password } = req.body;
 
-    if (typeof username !== "string" || typeof password !== "string")
-      return res.json({
+    if (typeof username !== "string" || typeof password !== "string") {
+      res.json({
         error: "no username or password",
       });
+      return;
+    }
 
     try {
       const token = await AuthUser(username, password);
 
-      return res.json({ token });
+      res.json({ token });
+      return;
     } catch (e) {
       res.status(406);
-      return res.json({ error: e });
+      res.json({ error: e });
+      return;
     }
   });
   app.post("/api/signin", async (req, res) => {
@@ -35,9 +39,11 @@ export default function AppendAuthHandlers(app: Express) {
     const { username, password } = req.body;
 
     if (typeof username !== "string" || typeof password !== "string") {
-      return res.json({
+      res.json({
         error: "no username or password",
       });
+
+      return;
     }
     try {
       const data = await db
@@ -50,22 +56,28 @@ export default function AppendAuthHandlers(app: Express) {
         ])
         .returning();
 
-      if (!data)
-        return res.json({
+      if (!data) {
+        res.json({
           error: "error inserting user to database",
         });
+        return;
+      }
       const d = data[0];
       const token = await generateAccessToken(d.username, d.id, d.privilege);
 
-      return res.json({
+      res.json({
         token,
       });
+
+      return;
     } catch (e) {
       res.status(406);
-      return res.json({
+      res.json({
         error: e,
         message: "error inserting user, already",
       });
+
+      return;
     }
   });
 

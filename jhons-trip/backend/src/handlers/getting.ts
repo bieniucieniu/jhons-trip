@@ -17,7 +17,8 @@ export default function AppendGettingHandlers(app: Express) {
           .select()
           .from(country)
           .where(eq(country.id, Number(id)));
-        return res.json({ data });
+        res.json({ data });
+        return;
       }
 
       const l = Number(limit) ?? 10;
@@ -28,10 +29,12 @@ export default function AppendGettingHandlers(app: Express) {
         .from(country)
         .limit(l)
         .where(like(country.name, "%" + n + "%"));
-      return res.json({ data });
+      res.json({ data });
+      return;
     } catch (e) {
       res.status(406);
-      return res.json({ error: e });
+      res.json({ error: e });
+      return;
     }
   });
 
@@ -49,7 +52,8 @@ export default function AppendGettingHandlers(app: Express) {
           .select()
           .from(region)
           .where(eq(region.id, Number(id)));
-        return res.json({ data });
+        res.json({ data });
+        return;
       }
       const data = await db
         .select()
@@ -61,10 +65,12 @@ export default function AppendGettingHandlers(app: Express) {
             c ? eq(region.countryId, c) : undefined,
           ),
         );
-      return res.json({ data });
+      res.json({ data });
+      return;
     } catch (e) {
       res.status(406);
-      return res.json({ error: e });
+      res.json({ error: e });
+      return;
     }
   });
 
@@ -80,7 +86,8 @@ export default function AppendGettingHandlers(app: Express) {
             region: true,
           },
         });
-        return res.json({ data });
+        res.json({ data });
+        return;
       }
 
       const l = limit ? Number(limit) : 10;
@@ -105,10 +112,12 @@ export default function AppendGettingHandlers(app: Express) {
       });
 
       res.status(200);
-      return res.json({ data });
+      res.json({ data });
+      return;
     } catch (e) {
       res.status(406);
-      return res.json({ error: e });
+      res.json({ error: e });
+      return;
     }
   });
 
@@ -135,10 +144,12 @@ export default function AppendGettingHandlers(app: Express) {
           journey: true,
         },
       });
-      return res.json({ data });
+      res.json({ data });
+      return;
     } catch (e) {
       res.status(406);
-      return res.json({ error: e });
+      res.json({ error: e });
+      return;
     }
   });
 

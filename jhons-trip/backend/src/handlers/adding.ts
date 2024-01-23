@@ -13,10 +13,12 @@ const insertCountriesSchema = createInsertSchema(country, {
 
 export default function AppendAddingHandlers(app: Express) {
   app.post("/api/countries", async (req, res) => {
-    res.setHeader("Content-Type", "application/json");
     const t = authenticateToken(req);
-
-    if (!t || t.privilege < 10) return res.status(401);
+    if (!t || t.privilege < 10) {
+      res.status(401);
+      return;
+    }
+    res.setHeader("Content-Type", "application/json");
 
     const { data } = req.body;
 
@@ -26,14 +28,16 @@ export default function AppendAddingHandlers(app: Express) {
       const ok = await db.insert(country).values(d).onConflictDoNothing();
       if (!ok) throw Error("cant insert country: " + d);
       res.status(200);
-      return res.json({
+      res.json({
         success: true,
       });
+      return;
     } catch (e) {
       res.status(406);
-      return res.json({
+      res.json({
         error: e,
       });
+      return;
     }
   });
 
@@ -42,9 +46,12 @@ export default function AppendAddingHandlers(app: Express) {
   }).array();
 
   app.post("/api/regions", async (req, res) => {
-    res.setHeader("Content-Type", "application/json");
     const t = authenticateToken(req);
-    if (!t || t.privilege < 10) return res.status(401);
+    if (!t || t.privilege < 10) {
+      res.status(401);
+      return;
+    }
+    res.setHeader("Content-Type", "application/json");
 
     const { data } = req.body;
 
@@ -55,14 +62,16 @@ export default function AppendAddingHandlers(app: Express) {
       if (!ok) throw Error("cant insert country: " + d);
 
       res.status(200);
-      return res.json({
+      res.json({
         success: true,
       });
+      return;
     } catch (e) {
       res.status(406);
-      return res.json({
+      res.json({
         error: e,
       });
+      return;
     }
   });
 
@@ -71,9 +80,12 @@ export default function AppendAddingHandlers(app: Express) {
   }).array();
 
   app.post("/api/journeys", async (req, res) => {
-    res.setHeader("Content-Type", "application/json");
     const t = authenticateToken(req);
-    if (!t || t.privilege < 10) return res.status(401);
+    if (!t || t.privilege < 10) {
+      res.status(401);
+      return;
+    }
+    res.setHeader("Content-Type", "application/json");
 
     const { data } = req.body;
 
@@ -84,14 +96,16 @@ export default function AppendAddingHandlers(app: Express) {
       if (!ok) throw Error("cant insert country: " + d);
 
       res.status(200);
-      return res.json({
+      res.json({
         success: true,
       });
+      return;
     } catch (e) {
       res.status(406);
-      return res.json({
+      res.json({
         error: e,
       });
+      return;
     }
   });
 
@@ -100,6 +114,10 @@ export default function AppendAddingHandlers(app: Express) {
   app.post("/api/book", async (req, res) => {
     res.setHeader("Content-Type", "application/json");
     const t = authenticateToken(req);
+    if (!t) {
+      res.status(406);
+      return;
+    }
     const { data, returning } = req.body;
 
     try {
@@ -107,7 +125,7 @@ export default function AppendAddingHandlers(app: Express) {
       const rejected: typeof d = [];
 
       const succeed = await asyncFilter(d, async (booking) => {
-        if (booking.userId !== t?.userID) throw new Error("incorect user id");
+        if (booking.userId !== t.userID) throw new Error("incorect user id");
         console.log(booking);
         const j = await db.query.journey.findFirst({
           where: eq(journey.id, booking.journeyId),
