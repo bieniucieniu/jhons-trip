@@ -6,6 +6,8 @@ import AppendAuthHandlers from "./handlers/auth";
 import AppendGettingHandlers from "./handlers/getting";
 import AppendAddingHandlers from "./handlers/adding";
 import AppendDeletingHandlers from "./handlers/deleting";
+import env from "dotenv";
+env.config();
 
 const app = express();
 
