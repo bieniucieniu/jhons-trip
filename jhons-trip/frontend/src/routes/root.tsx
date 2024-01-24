@@ -1,12 +1,10 @@
-import Banner from "@/components/banner";
 import JourneysList from "@/components/journeysList";
 import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
 
 export default function Root() {
   return (
-    <main className="flex justify-between items-start m-auto max-w-screen-lg py-10">
-      <Banner />
+    <main className="flex xl:justify-end justifg-center items-start xl:mx-auto mx-10 max-w-screen-lg py-10">
       <div className="flex flex-col justify-center">
         <JourneysList
           query={{ limit: 10 }}

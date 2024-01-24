@@ -13,7 +13,7 @@ import { Redirect, useLocation, useParams } from "wouter";
 export default function Browse() {
   const [_, setLocation] = useLocation();
   const { page } = useParams();
-  const { data: limit, status } = getLimit("joutney");
+  const { data: limit, status } = getLimit("journey");
   const maxPage: number =
     status === "success" && limit ? Math.ceil(limit.valueOf() / 20) : Infinity;
 

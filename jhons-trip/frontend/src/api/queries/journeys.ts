@@ -14,6 +14,7 @@ export const journeysSchema = z.object({
   booked: z.number().int(),
   regionId: z.number().int(),
   imageUrl: z.string().optional(),
+  price: z.number(),
   region: z
     .object({
       id: z.number().int(),
@@ -41,6 +42,8 @@ export default function useGetJourneys({
   regionId?: number;
   id?: number;
   offset?: number;
+  max?: number;
+  min?: number;
 }) {
   return useQuery({
     queryKey: [

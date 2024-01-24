@@ -1,4 +1,4 @@
-import { Journey } from "@/api/queries/getJourneys";
+import { Journey } from "@/api/queries/journeys";
 import {
   Card,
   CardContent,
@@ -18,6 +18,7 @@ export default function JourneyDisplay({
   details,
   imageUrl,
   region,
+  price,
 }: Omit<Journey, "details"> & { details?: string }) {
   return (
     <Card>
@@ -25,7 +26,7 @@ export default function JourneyDisplay({
         <CardTitle>{name}</CardTitle>
         <CardDescription>{description}</CardDescription>
       </CardHeader>
-      <CardContent className="flex gap-x-10">
+      <CardContent className="flex flex-wrap gap-x-10">
         <div className="flex flex-col gap-y-10">
           {details ? <p>{details}</p> : null}
           <ul className="flex flex-col pl-6">
@@ -33,12 +34,13 @@ export default function JourneyDisplay({
             <li>end: {format(end, "MM/dd/yyyy")}</li>
             <li>remaining slots: {slots - booked}</li>
             <li>booked: {booked}</li>
+            <li>price: {price}$</li>
           </ul>
           {region ? <p>{region.name}</p> : null}
         </div>
         {imageUrl ? (
           <img
-            className="h-[300px] w-auto rounded-lg"
+            className="h-auto w-[400px] rounded-lg"
             src={imageUrl}
             alt={"img-" + name}
           />

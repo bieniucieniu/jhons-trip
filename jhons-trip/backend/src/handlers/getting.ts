@@ -76,7 +76,17 @@ export default function AppendGettingHandlers(app: Express) {
 
   app.get("/api/journeys", async (req, res) => {
     res.setHeader("Content-Type", "application/json");
-    const { limit, name, regionId, id, offset, start, end } = req.query;
+    const {
+      limit,
+      name,
+      regionId,
+      id,
+      offset,
+      start,
+      end,
+      minPrice,
+      maxPrice,
+    } = req.query;
 
     try {
       if (id) {
@@ -96,6 +106,8 @@ export default function AppendGettingHandlers(app: Express) {
       const o = offset ? Number(offset) : undefined;
       const s = start ? Number(start) : undefined;
       const e = end ? Number(end) : undefined;
+      const max = maxPrice ? Number(maxPrice) : undefined;
+      const min = minPrice ? Number(minPrice) : undefined;
 
       const data = await db.query.journey.findMany({
         limit: l,
@@ -105,6 +117,8 @@ export default function AppendGettingHandlers(app: Express) {
           r ? eq(journey.regionId, r) : undefined,
           s ? gt(journey.start, s) : undefined,
           e ? lt(journey.end, e) : undefined,
+          max ? lt(journey.price, max) : undefined,
+          min ? gt(journey.price, min) : undefined,
         ),
         with: {
           region: true,
@@ -163,7 +177,7 @@ export default function AppendGettingHandlers(app: Express) {
     const { table } = req.query;
 
     const tableName = table ? String(table) : "";
-    const t = tablesMap.find(({ name }) => name !== tableName);
+    const t = tablesMap.find(({ name }) => name === tableName);
     if (!t) {
       res.status(400);
       res.json({
@@ -172,7 +186,7 @@ export default function AppendGettingHandlers(app: Express) {
       return;
     }
     try {
-      const data = await db.select({ value: count() }).from(t.table);
+      const data = await db.select({ value: count(t.table.id) }).from(t.table);
 
       res.status(200);
       res.json(data[0]);

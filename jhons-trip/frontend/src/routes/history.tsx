@@ -96,13 +96,22 @@ export default function History() {
     return (
       <main>
         <h1 className="text-7xl p-3">Journey History</h1>
-        <ul className="flex flex-col gap-y-4 max-w-screen-lg mx-auto py-10">
-          {data.map((d, i) => (
-            <li key={d.journeyName + i}>
-              <Tile data={d} lock={lock} setLock={setLock} />
-            </li>
-          ))}
-        </ul>
+        {data.length > 0 ? (
+          <ul className="flex flex-col gap-y-4 max-w-screen-lg mx-auto py-10">
+            {data.map((d, i) => (
+              <li key={d.journeyName + i}>
+                <Tile data={d} lock={lock} setLock={setLock} />
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <div className="flex justify-center items-center h-[calc(100svh_-_100px)]">
+            <p className="">
+              nothing here, <br />
+              no history to display
+            </p>
+          </div>
+        )}
       </main>
     );
   return <div> unknown error</div>;

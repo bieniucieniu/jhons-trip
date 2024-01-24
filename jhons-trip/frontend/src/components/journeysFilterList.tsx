@@ -20,6 +20,8 @@ type FiltersActions =
   | { type: "name"; value?: string }
   | { type: "start"; value?: Date | null }
   | { type: "end"; value?: Date | null }
+  | { type: "max"; value?: number }
+  | { type: "min"; value?: number }
   | { type: "reset" };
 function FiltersReducer(state: Filters, action: FiltersActions): Filters {
   if (action.type !== "reset" && action.value === null) {
@@ -52,6 +54,16 @@ function FiltersReducer(state: Filters, action: FiltersActions): Filters {
         ...state,
         end: action.value?.getTime(),
       };
+    case "max":
+      return {
+        ...state,
+        max: action.value,
+      };
+    case "min":
+      return {
+        ...state,
+        min: action.value,
+      };
     case "reset":
       return {};
   }
@@ -74,8 +86,8 @@ export default function JourneysFilterList({
   }, [f]);
 
   return (
-    <div className="grid grid-cols-2 items-start gap-6">
-      <Card className="mb-10">
+    <div className="grid 2xl:grid-cols-2 grid-cols-1 items-start gap-6">
+      <Card className="mb-10 2xl:mx-0 mx-10">
         <CardHeader>
           <CardTitle>Filters</CardTitle>
         </CardHeader>
@@ -133,6 +145,44 @@ export default function JourneysFilterList({
                   value={f?.end ? format(f.end, "yyyy-MM-dd") : undefined}
                   type="date"
                   placeholder="end"
+                />
+              </div>
+            </li>
+            <li>
+              <Label className="w-full" htmlFor="min">
+                min price
+              </Label>
+              <div className="flex gap-x-2">
+                <Input
+                  onChange={(e) =>
+                    dispatch({
+                      type: "min",
+                      value: e.target.valueAsNumber,
+                    })
+                  }
+                  id="min"
+                  value={f.min}
+                  type="number"
+                  placeholder="max price"
+                />
+              </div>
+            </li>
+            <li>
+              <Label className="w-full" htmlFor="max">
+                max price
+              </Label>
+              <div className="flex gap-x-2">
+                <Input
+                  onChange={(e) =>
+                    dispatch({
+                      type: "max",
+                      value: e.target.valueAsNumber,
+                    })
+                  }
+                  id="max"
+                  value={f.min}
+                  type="number"
+                  placeholder="min price"
                 />
               </div>
             </li>

@@ -8,11 +8,12 @@ import { logout } from "./api/userAuth";
 import { Card, CardHeader, CardTitle } from "./components/ui/card";
 import { Button } from "./components/ui/button";
 import useGetUser from "./api/queries/user";
+import Banner from "./components/banner";
 
 export default function App() {
   const user = useGetUser();
   return (
-    <>
+    <div className="pt-[160px]">
       <Switch>
         <Route path="/" component={Root} />
         <Route path="/journey/:id" component={Journey} />
@@ -26,11 +27,26 @@ export default function App() {
           <main className="flex justify-center items-center">404</main>
         </Route>
       </Switch>
-      <Card className="absolute top-0 right-0 rounded-r-none rounded-t-none">
-        <CardHeader>
+      <Card className="fixed top-0 right-0 left-0 rounded-r-none rounded-t-none">
+        <CardHeader className="flex flex-row justify-between">
+          <nav className="flex gap-x-6 flex-wrap items-center">
+            <Link href="/">
+              <a>
+                <Banner className="select-none" />
+              </a>
+            </Link>
+            <Link href="/browse" className="text-2xl text-bold hover:underline">
+              all journeys
+            </Link>
+          </nav>
           {user && user.data ? (
-            <>
-              <CardTitle>loged as {user?.data.username}</CardTitle>
+            <div className="flex flex-col gap-y-1">
+              <CardTitle className="mx-auto">
+                loged as {user?.data.username}
+              </CardTitle>
+              <Button variant="link">
+                <Link href="/history">history of booking</Link>
+              </Button>
               <Button
                 onClick={() => {
                   logout();
@@ -39,7 +55,7 @@ export default function App() {
               >
                 logout
               </Button>
-            </>
+            </div>
           ) : (
             <Button variant="link">
               <Link href="/login">login/signin</Link>
@@ -47,6 +63,6 @@ export default function App() {
           )}
         </CardHeader>
       </Card>
-    </>
+    </div>
   );
 }
