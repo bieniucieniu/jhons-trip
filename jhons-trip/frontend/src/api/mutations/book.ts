@@ -3,8 +3,8 @@ import { useMutation } from "@tanstack/react-query";
 import { z } from "zod";
 
 export const bookSchema = z.object({
-  for: z.number().int(),
-  journeyName: z.string(),
+  for: z.number().int().nonnegative(),
+  journeyName: z.string().min(3),
   userId: z.number().int(),
   journeyId: z.number().int(),
 });

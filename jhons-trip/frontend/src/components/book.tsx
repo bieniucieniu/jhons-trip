@@ -1,14 +1,13 @@
-import { z } from "zod";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
-import { useBook, bookSchema } from "@/api/mutations/book";
-import { useReducer } from "react";
+import { Book } from "@/api/mutations/book";
+import { useReducer, useState } from "react";
 import { Label } from "@radix-ui/react-label";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { Link } from "wouter";
 import useGetUser from "@/api/queries/user";
 import { useBasket } from "./basket";
-type Inputs = z.infer<typeof bookSchema>;
+type Inputs = Book;
 type Actions =
   | { type: "for"; value?: number }
   | { type: "journeyName"; value?: string };
@@ -43,11 +42,13 @@ export default function Book({
   const [f, dispatch] = useReducer(UserInputReducer, {
     for: 1,
     journeyName: name,
-    userId: undefined,
+    userId: undefined ?? 1,
     journeyId: id,
   });
+
   const user = useGetUser();
   const { addBook } = useBasket();
+  const [message, setMessage] = useState<string | undefined>(undefined);
   if (!user) return <div>no user</div>;
   if (!user.data)
     return (
@@ -59,15 +60,6 @@ export default function Book({
       </div>
     );
   if (!id) return <div>error no id provided</div>;
-
-  if (!!true)
-    return (
-      <Card className={className}>
-        <CardHeader>
-          <CardTitle>successfully booked</CardTitle>
-        </CardHeader>
-      </Card>
-    );
 
   return (
     <Card className={className}>
@@ -108,7 +100,17 @@ export default function Book({
               />
             </div>
           </li>
-          <Button onClick={() => addBook(f)}>book</Button>
+          <Button
+            onClick={() =>
+              addBook(f, (m) => {
+                console.log(m);
+                setMessage(m);
+              })
+            }
+          >
+            book
+          </Button>
+          {message ? <p> {message} </p> : null}
         </ul>
       </CardContent>
     </Card>

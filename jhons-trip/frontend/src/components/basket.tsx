@@ -1,31 +1,44 @@
-import { Book } from "@/api/mutations/book";
+import { Book, bookSchema } from "@/api/mutations/book";
 import { createContext, useContext, useState } from "react";
 
 const basketContext = createContext<
-  | { book: Book[]; addBook: (b: Book) => void; deleteBook: (b: Book) => void }
+  | {
+      book: Book[];
+      addBook: (b: Partial<Book>, callback?: (m: string) => void) => void;
+      deleteBook: (id: number, callback?: (m: string) => void) => void;
+    }
   | undefined
 >(undefined);
 
 export function BasketProvider({ children }: { children: React.ReactNode }) {
   const [book, setBook] = useState<Book[]>([]);
 
-  function addBook(newBook: Book, callback?: (message: string) => void) {
-    const i = book.findIndex((b) => b.journeyId === newBook.journeyId);
+  function addBook(
+    newBook: Partial<Book>,
+    callback?: (message: string) => void,
+  ) {
+    const s = bookSchema.safeParse(newBook);
+    if (!s.success) {
+      callback && callback(s.error.message);
+      return;
+    }
+
+    const i = book.findIndex((b) => b.journeyId === s.data.journeyId);
     if (i !== -1) {
-      book[i] = newBook;
+      book[i] = s.data;
       setBook([...book]);
       callback && callback("item has been updated");
       return;
     }
 
-    setBook([...book, newBook]);
+    setBook([...book, s.data]);
 
     callback && callback("item added");
   }
 
-  function deleteBook(toDelete: Book, callback?: (message: string) => void) {
+  function deleteBook(id: number, callback?: (message: string) => void) {
     const out = book.filter((b) => {
-      return b.journeyId !== toDelete.journeyId;
+      return b.journeyId !== id;
     });
 
     const message =
