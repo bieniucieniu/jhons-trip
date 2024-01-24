@@ -125,8 +125,9 @@ export default function AppendAddingHandlers(app: Express) {
     try {
       const d = insertHistorySchema.parse(data);
       const rejected: typeof d = [];
-
       const succeed = await asyncFilter(d, async (booking) => {
+        console.log(booking.userId !== t.userID);
+
         if (booking.userId !== t.userID) throw new Error("incorect user id");
         console.log(booking);
         const j = await db.query.journey.findFirst({
@@ -137,10 +138,13 @@ export default function AppendAddingHandlers(app: Express) {
           rejected.push(booking);
           return false;
         }
-        await db
+
+        console.log({ booked: j.booked + booking.for });
+        const r = await db
           .update(journey)
           .set({ booked: j.booked + booking.for })
           .where(eq(journey.id, booking.journeyId));
+        console.log(r);
         return true;
       });
 

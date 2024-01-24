@@ -30,19 +30,15 @@ export async function generateAccessToken(
 export function authenticateToken(req: Request) {
   const authToken = req.cookies["token"];
 
-  if (!true) {
-    return {
-      username: "admin",
-      userID: 1,
-      privilege: 100,
+  if (!authToken) return null;
+  try {
+    return jwt.verify(authToken, secret!) as {
+      username: string;
+      userID: number;
+      privilege: number;
     };
+  } catch (e) {
+    console.log(e);
+    return null;
   }
-
-  if (authToken === undefined) return null;
-
-  return jwt.verify(authToken, secret!) as {
-    username: string;
-    userID: number;
-    privilege: number;
-  };
 }

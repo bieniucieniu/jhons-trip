@@ -16,7 +16,7 @@ import Admin from "./routes/admin";
 export default function App() {
   const user = useGetUser();
   return (
-    <div className="pt-[160px]">
+    <div className="pt-[200px]">
       <Switch>
         <Route path="/" component={Root} />
         <Route path="/journey/:id" component={Journey} />
@@ -48,7 +48,7 @@ export default function App() {
               user.data.privilege >= 100 ? (
                 <Link href="/admin">admin dashboard</Link>
               ) : user.data.privilege >= 10 ? (
-                <Link href="/admin">admin dashboard</Link>
+                <Link href="/mod">mod dashboard</Link>
               ) : null
             ) : null}
           </nav>

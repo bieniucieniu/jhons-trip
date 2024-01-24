@@ -161,7 +161,7 @@ export default function JourneysFilterList({
                     })
                   }
                   id="min"
-                  value={f?.min}
+                  value={f?.min ?? ""}
                   type="number"
                   placeholder="min price"
                 />
@@ -180,7 +180,7 @@ export default function JourneysFilterList({
                     })
                   }
                   id="max"
-                  value={f?.max}
+                  value={f?.max ?? ""}
                   type="number"
                   placeholder="max price"
                 />

@@ -50,5 +50,6 @@ export async function login(
 }
 
 export function logout() {
-  document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+  console.log("daksjdhk");
+  document.cookie = "token=0; expires=Fri, 31 Dec 2000 23:59:59 GMT; path=/";
 }

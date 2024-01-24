@@ -1,16 +1,17 @@
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Book } from "@/api/mutations/book";
-import { useReducer, useState } from "react";
+import { useEffect, useReducer, useState } from "react";
 import { Label } from "@radix-ui/react-label";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { Link } from "wouter";
-import useGetUser from "@/api/queries/user";
+import useGetUser, { type User } from "@/api/queries/user";
 import { useBasket } from "./basket";
 type Inputs = Book;
 type Actions =
   | { type: "for"; value?: number }
-  | { type: "journeyName"; value?: string };
+  | { type: "journeyName"; value?: string }
+  | { type: "user"; value?: User };
 
 function UserInputReducer(
   state: Partial<Inputs>,
@@ -27,6 +28,11 @@ function UserInputReducer(
         ...state,
         journeyName: action.value,
       };
+    case "user":
+      return {
+        ...state,
+        userId: action.value?.userID,
+      };
   }
 }
 
@@ -39,18 +45,23 @@ export default function Book({
   id: number;
   name: string;
 }) {
+  const { addBook } = useBasket();
+  const user = useGetUser();
+  const [message, setMessage] = useState<string | undefined>(undefined);
   const [f, dispatch] = useReducer(UserInputReducer, {
     for: 1,
     journeyName: name,
-    userId: undefined ?? 1,
+    userId: undefined,
     journeyId: id,
   });
 
-  const user = useGetUser();
-  const { addBook } = useBasket();
-  const [message, setMessage] = useState<string | undefined>(undefined);
+  useEffect(() => {
+    if (user.isSuccess && user.data)
+      dispatch({ type: "user", value: user.data });
+  }, [user.isSuccess, user.data]);
+
   if (!user) return <div>no user</div>;
-  if (!user.data)
+  if (!user.data || !user.data.userID)
     return (
       <div>
         {user.error ? <p>{user.error.message}</p> : null}
