@@ -215,7 +215,7 @@ export default function AppendAddingHandlers(app: Express) {
 
   const insertCommentSchema = createInsertSchema(comment);
 
-  app.post("/api/comment", (req, res) => {
+  app.post("/api/comments", (req, res) => {
     res.setHeader("Content-Type", "application/json");
     const { data } = req.body;
 

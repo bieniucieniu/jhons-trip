@@ -2,11 +2,13 @@ import { useQuery } from "@tanstack/react-query";
 import getBaseUrl from "@/lib/getBaseUrl";
 import cleanupObject from "@/lib/cleanupObject";
 import { z } from "zod";
+import { countriesSchema } from "./countries";
 
-const regionsSchema = z.object({
+export const regionsSchema = z.object({
   id: z.number().int(),
   name: z.string(),
   countryId: z.number().int(),
+  country: countriesSchema.optional(),
 });
 
 export default function useGetRegions({

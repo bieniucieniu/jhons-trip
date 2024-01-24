@@ -2,6 +2,8 @@ import { useQuery } from "@tanstack/react-query";
 import getBaseUrl from "@/lib/getBaseUrl";
 import cleanupObject from "@/lib/cleanupObject";
 import { z } from "zod";
+import { commentSchema } from "./comments";
+import { regionsSchema } from "./regions";
 
 export const journeysSchema = z.object({
   id: z.number().int(),
@@ -15,34 +17,8 @@ export const journeysSchema = z.object({
   regionId: z.number().int(),
   imageUrl: z.string().optional(),
   price: z.number(),
-  comment: z
-    .object({
-      rating: z.number(),
-      title: z.string(),
-      content: z.string(),
-      user: z
-        .object({
-          username: z.string(),
-          id: z.number().int(),
-        })
-        .optional(),
-    })
-    .array()
-    .optional(),
-  region: z
-    .object({
-      id: z.number().int(),
-      name: z.string(),
-      countryId: z.number(),
-      country: z
-        .object({
-          code: z.string(),
-          id: z.number().int(),
-          name: z.string(),
-        })
-        .optional(),
-    })
-    .optional(),
+  comment: commentSchema.array().optional(),
+  region: regionsSchema.optional(),
 });
 
 export type Journey = z.infer<typeof journeysSchema>;

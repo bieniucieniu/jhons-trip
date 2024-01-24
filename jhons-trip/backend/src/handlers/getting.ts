@@ -1,7 +1,7 @@
 import type { Express } from "express";
 import { and, count, eq, gt, like, lt } from "drizzle-orm";
 import { country, journey, region } from "../../shared/schema/journey";
-import { history } from "@/shared/schema/user";
+import { comment, history } from "@/shared/schema/user";
 import { db } from "../db";
 import { authenticateToken } from "../auth";
 
@@ -227,6 +227,22 @@ export default function AppendGettingHandlers(app: Express) {
         return;
       }
     }
+  });
+
+  app.get("/api/comments", async (req, res) => {
+    res.setHeader("Content-Type", "application/json");
+    const { limit, journeyId, id, offset } = req.query;
+    const l = limit ? Number(limit) : 20;
+    const o = offset ? Number(offset) : undefined;
+    const j = journeyId ? Number(journeyId) : undefined;
+
+    if (id) {
+    }
+    db.query.comment.findMany({
+      limit: l,
+      offset: o,
+      where: and(j ? eq(comment.journeyId, j) : undefined),
+    });
   });
 
   return app;
