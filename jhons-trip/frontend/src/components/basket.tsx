@@ -6,6 +6,7 @@ const basketContext = createContext<
       book: Book[];
       addBook: (b: Partial<Book>, callback?: (m: string) => void) => void;
       deleteBook: (id: number, callback?: (m: string) => void) => void;
+      reset: () => void;
     }
   | undefined
 >(undefined);
@@ -48,7 +49,9 @@ export function BasketProvider({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <basketContext.Provider value={{ book, addBook, deleteBook }}>
+    <basketContext.Provider
+      value={{ book, addBook, deleteBook, reset: () => setBook([]) }}
+    >
       {children}
     </basketContext.Provider>
   );
@@ -59,8 +62,4 @@ export function useBasket() {
   if (!c) throw new Error("not in basket context");
 
   return c;
-}
-
-export function Basket() {
-  const {} = useBasket();
 }

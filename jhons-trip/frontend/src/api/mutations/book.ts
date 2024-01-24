@@ -13,7 +13,7 @@ export type Book = z.infer<typeof bookSchema>;
 
 export function useBook() {
   return useMutation({
-    mutationKey: ["journeys", "history"],
+    mutationKey: ["history"],
     mutationFn: async (data: Partial<z.infer<typeof bookSchema>>[]) => {
       bookSchema.array().parse(data);
       const res = await (

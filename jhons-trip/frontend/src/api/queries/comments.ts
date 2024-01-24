@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { z } from "zod";
 
 export const commentSchema = z.object({
+  id: z.number(),
   rating: z.number(),
   title: z.string(),
   content: z.string(),
@@ -41,7 +42,7 @@ export default function useGetComments({
       ).toString();
       const res = await (
         await fetch(
-          getBaseUrl() + "api/comment" + (params ? "?" + params : ""),
+          getBaseUrl() + "api/comments" + (params ? "?" + params : ""),
           {
             mode: "cors",
             method: "GET",

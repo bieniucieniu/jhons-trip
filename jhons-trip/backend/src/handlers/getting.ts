@@ -1,5 +1,5 @@
 import type { Express } from "express";
-import { and, count, eq, gt, like, lt } from "drizzle-orm";
+import { and, count, desc, eq, gt, like, lt } from "drizzle-orm";
 import { country, journey, region } from "../../shared/schema/journey";
 import { comment, history } from "@/shared/schema/user";
 import { db } from "../db";
@@ -176,14 +176,18 @@ export default function AppendGettingHandlers(app: Express) {
     const c = countryId ? Number(countryId) : undefined;
     try {
       const data = await db.query.history.findMany({
+        orderBy: desc(history.id),
         limit: l,
         where: and(
-          eq(history.userId, t.userID),
+          t.privilege < 10 ? eq(history.userId, t.userID) : undefined,
           n ? like(history.journeyName, "%" + n + "%") : undefined,
           c ? eq(history.journeyId, c) : undefined,
         ),
         with: {
           journey: true,
+          comment: {
+            orderBy: desc(comment.id),
+          },
         },
       });
       res.json({ data });
@@ -236,13 +240,32 @@ export default function AppendGettingHandlers(app: Express) {
     const o = offset ? Number(offset) : undefined;
     const j = journeyId ? Number(journeyId) : undefined;
 
-    if (id) {
+    if (typeof id === "string") {
+      db.query.comment.findFirst({ where: eq(comment.id, Number(id)) });
     }
-    db.query.comment.findMany({
+    const data = await db.query.comment.findMany({
+      orderBy: desc(history.id),
       limit: l,
       offset: o,
       where: and(j ? eq(comment.journeyId, j) : undefined),
     });
+
+    res.status(200);
+    res.json({ data });
+    return;
+  });
+
+  app.get("/api/users", async (req, res) => {
+    res.setHeader("Content-Type", "application/json");
+    const t = authenticateToken(req);
+    if (!t || t.privilege < 10) {
+      res.status(401);
+      return;
+    }
+
+    const data = await db.query.user.findMany({});
+    res.status(200);
+    res.json({ data });
   });
 
   return app;

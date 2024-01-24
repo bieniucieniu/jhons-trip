@@ -1,5 +1,6 @@
 import { useCancelJourney } from "@/api/mutations/book";
 import getUserHistory from "@/api/queries/userHistory";
+import AddComment from "@/components/addComment";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -19,11 +20,11 @@ function Tile({
   lock: boolean;
   setLock: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
-  if (!d) return null;
   const cancel = useCancelJourney();
   const [cancelEnable, setCancelEnable] = useState<boolean>(false);
   const [deleted, setDeleted] = useState<boolean>(false);
 
+  if (!d) return null;
   if (deleted)
     return (
       <Card>
@@ -80,6 +81,7 @@ function Tile({
                   {cancelEnable ? "yes" : "?"}
                 </Button>
               </div>
+              <AddComment historyId={d.id} />
             </CardContent>
           </Card>
         ) : null}

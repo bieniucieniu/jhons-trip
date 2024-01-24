@@ -10,7 +10,7 @@ import {
 import useGetUser from "@/api/queries/user";
 import { Button } from "./ui/button";
 
-export default function commentList(comments: Comment[]) {
+export default function CommentList(comments: Comment[]) {
   const { data } = useGetUser();
   return (
     <ul>

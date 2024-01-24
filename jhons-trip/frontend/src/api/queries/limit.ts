@@ -13,7 +13,7 @@ export default function useGetLimit(table: string) {
         })
       ).json();
       if (res["error"]) throw new Error(res["error"]);
-      return z.number().int().parse(res.value) as Number | undefined;
+      return z.number().int().parse(res.value) as number | undefined;
     },
     staleTime: 1000 * 60 * 60 * 60,
   });

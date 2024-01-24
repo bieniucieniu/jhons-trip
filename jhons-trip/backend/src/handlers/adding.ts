@@ -6,7 +6,7 @@ import { authenticateToken } from "../auth";
 import { db } from "../db";
 import { comment, history } from "@/shared/schema/user";
 import { asyncFilter } from "../utils";
-import { and, eq } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 const insertCountriesSchema = createInsertSchema(country, {
   name: z.string().toUpperCase(),
 }).array();
@@ -109,7 +109,9 @@ export default function AppendAddingHandlers(app: Express) {
     }
   });
 
-  const insertHistorySchema = createInsertSchema(history).array();
+  const insertHistorySchema = createInsertSchema(history)
+    .omit({ date: true })
+    .array();
 
   app.post("/api/book", async (req, res) => {
     res.setHeader("Content-Type", "application/json");
@@ -119,7 +121,7 @@ export default function AppendAddingHandlers(app: Express) {
       return;
     }
     const { data, returning } = req.body;
-
+    const date = new Date().getTime();
     try {
       const d = insertHistorySchema.parse(data);
       const rejected: typeof d = [];
@@ -142,7 +144,12 @@ export default function AppendAddingHandlers(app: Express) {
         return true;
       });
 
-      await db.insert(history).values(succeed);
+      await db.insert(history).values(
+        succeed.map((e) => ({
+          ...e,
+          date,
+        })),
+      );
 
       if (rejected.length > 0 || returning)
         return res.json({
@@ -163,65 +170,44 @@ export default function AppendAddingHandlers(app: Express) {
     }
   });
 
-  app.post("/api/cancel", async (req, res) => {
+  const insertCommentSchema = createInsertSchema(comment).omit({
+    userId: true,
+    regionId: true,
+    journeyId: true,
+  });
+
+  app.post("/api/comments", async (req, res) => {
     res.setHeader("Content-Type", "application/json");
     const t = authenticateToken(req);
     if (!t) {
       res.status(406);
       return;
     }
-    const { id } = req.body;
-    console.log({ id });
-    try {
-      const i = z.number().parse(id);
-
-      const d = await db
-        .update(history)
-        .set({
-          for: 0,
-          journeyName: "canceled",
-        })
-        .where(and(eq(history.id, i), eq(history.userId, t.userID)))
-        .returning();
-
-      const j = await db
-        .select({ booked: journey.booked })
-        .from(journey)
-        .where(eq(journey.id, d[0].id));
-      if (d && j) {
-        const r = await db
-          .update(journey)
-          .set({
-            booked: j[0].booked > d[0].for ? j[0].booked - d[0].for : 0,
-          })
-          .where(eq(journey.id, d[0].id));
-
-        await db
-          .delete(history)
-          .where(and(eq(history.id, i), eq(history.userId, t.userID)));
-        res.status(200);
-        return res.json({ return: r });
-      }
-      res.status(500);
-      return;
-    } catch (e) {
-      console.log(e);
-      res.status(406);
-      return res.json({
-        error: e,
-      });
-    }
-  });
-
-  const insertCommentSchema = createInsertSchema(comment);
-
-  app.post("/api/comments", (req, res) => {
-    res.setHeader("Content-Type", "application/json");
     const { data } = req.body;
 
     try {
       const d = insertCommentSchema.parse(data);
-      db.insert(comment).values(d);
+      const h = await db.query.history.findFirst({
+        where: eq(history.id, d.historyId),
+        with: {
+          journey: true,
+        },
+      });
+      if (t.userID !== h?.userId) {
+        res.status(406);
+        return;
+      }
+
+      const out = await db.insert(comment).values({
+        ...d,
+        userId: t.userID,
+        journeyId: h.journey.id,
+        regionId: h.journey.regionId,
+      });
+      console.log(out);
+      res.status(200);
+      res.json({ success: true });
+      return;
     } catch (e) {
       res.status(406);
       res.json({ error: e });

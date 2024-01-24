@@ -9,10 +9,10 @@ const countriesSchema = z
   })
   .array();
 
-export function useAddCoutries(data: z.infer<typeof countriesSchema>) {
+export function useAddCoutries() {
   return useMutation({
     mutationKey: ["countries"],
-    mutationFn: async () => {
+    mutationFn: async (data: z.infer<typeof countriesSchema>) => {
       countriesSchema.parse(data);
       const res = await (
         await fetch(getBaseUrl() + "api/countries", {

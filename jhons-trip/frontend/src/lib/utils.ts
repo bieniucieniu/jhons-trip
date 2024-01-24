@@ -7,7 +7,7 @@ export function cn(...inputs: ClassValue[]) {
 
 export function getParamsObject() {
   if (location.search[0] !== "?") return;
-  let search = location.search.substring(1);
+  const search = location.search.substring(1);
 
   return JSON.parse(
     '{"' +

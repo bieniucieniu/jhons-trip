@@ -48,6 +48,11 @@ export default function Login() {
   });
   const user = useGetUser();
 
+  const [f, dispatch] = useReducer(UserInputReducer, {
+    username: "",
+    password: "",
+  });
+
   if (user?.data)
     return (
       <div>
@@ -55,10 +60,6 @@ export default function Login() {
       </div>
     );
 
-  const [f, dispatch] = useReducer(UserInputReducer, {
-    username: "",
-    password: "",
-  });
   return (
     <Card className="max-w-screen-sm mx-auto my-10">
       <CardContent>

@@ -30,7 +30,7 @@ export async function generateAccessToken(
 export function authenticateToken(req: Request) {
   const authToken = req.cookies["token"];
 
-  if (!!true) {
+  if (!true) {
     return {
       username: "admin",
       userID: 1,
