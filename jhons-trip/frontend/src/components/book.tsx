@@ -7,6 +7,7 @@ import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { Link } from "wouter";
 import useGetUser from "@/api/queries/user";
+import { useBasket } from "./basket";
 type Inputs = z.infer<typeof bookSchema>;
 type Actions =
   | { type: "for"; value?: number }
@@ -46,7 +47,7 @@ export default function Book({
     journeyId: id,
   });
   const user = useGetUser();
-  const bookMutation = useBook();
+  const { addBook } = useBasket();
   if (!user) return <div>no user</div>;
   if (!user.data)
     return (
@@ -59,7 +60,7 @@ export default function Book({
     );
   if (!id) return <div>error no id provided</div>;
 
-  if (bookMutation.isSuccess)
+  if (!!true)
     return (
       <Card className={className}>
         <CardHeader>
@@ -81,7 +82,6 @@ export default function Book({
             </Label>
             <div className="flex gap-x-2">
               <Input
-                disabled={bookMutation.isPending}
                 onChange={(e) =>
                   dispatch({ type: "journeyName", value: e.target.value })
                 }
@@ -98,7 +98,6 @@ export default function Book({
             </Label>
             <div className="flex gap-x-2">
               <Input
-                disabled={bookMutation.isPending}
                 onChange={(e) =>
                   dispatch({ type: "for", value: e.target.valueAsNumber })
                 }
@@ -109,12 +108,7 @@ export default function Book({
               />
             </div>
           </li>
-          <Button
-            disabled={bookMutation.isPending}
-            onClick={() => bookMutation.mutate([{ ...f, userId: 0 }])}
-          >
-            book
-          </Button>
+          <Button onClick={() => addBook(f)}>book</Button>
         </ul>
       </CardContent>
     </Card>

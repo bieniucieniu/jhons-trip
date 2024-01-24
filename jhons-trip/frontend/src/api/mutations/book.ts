@@ -9,6 +9,8 @@ export const bookSchema = z.object({
   journeyId: z.number().int(),
 });
 
+export type Book = z.infer<typeof bookSchema>;
+
 export function useBook() {
   return useMutation({
     mutationKey: ["journeys", "history"],
