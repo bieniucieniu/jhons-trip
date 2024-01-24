@@ -4,7 +4,7 @@ import type { Express } from "express";
 import { z } from "zod";
 import { authenticateToken } from "../auth";
 import { db } from "../db";
-import { history } from "@/shared/schema/user";
+import { comment, history } from "@/shared/schema/user";
 import { asyncFilter } from "../utils";
 import { and, eq } from "drizzle-orm";
 const insertCountriesSchema = createInsertSchema(country, {
@@ -210,6 +210,22 @@ export default function AppendAddingHandlers(app: Express) {
       return res.json({
         error: e,
       });
+    }
+  });
+
+  const insertCommentSchema = createInsertSchema(comment);
+
+  app.post("/api/comment", (req, res) => {
+    res.setHeader("Content-Type", "application/json");
+    const { data } = req.body;
+
+    try {
+      const d = insertCommentSchema.parse(data);
+      db.insert(comment).values(d);
+    } catch (e) {
+      res.status(406);
+      res.json({ error: e });
+      return;
     }
   });
 
