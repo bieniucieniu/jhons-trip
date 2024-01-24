@@ -161,9 +161,9 @@ export default function JourneysFilterList({
                     })
                   }
                   id="min"
-                  value={f.min}
+                  value={f?.min}
                   type="number"
-                  placeholder="max price"
+                  placeholder="min price"
                 />
               </div>
             </li>
@@ -180,9 +180,9 @@ export default function JourneysFilterList({
                     })
                   }
                   id="max"
-                  value={f.min}
+                  value={f?.max}
                   type="number"
-                  placeholder="min price"
+                  placeholder="max price"
                 />
               </div>
             </li>
@@ -198,7 +198,7 @@ export default function JourneysFilterList({
         </CardContent>
       </Card>
       <JourneysList
-        className="flex flex-col items-center gap-6 min-w-[756px]"
+        className="flex flex-col items-stretch gap-6 min-w-[756px]"
         query={{ ...f, ...filters }}
       ></JourneysList>
     </div>

@@ -15,11 +15,32 @@ export const journeysSchema = z.object({
   regionId: z.number().int(),
   imageUrl: z.string().optional(),
   price: z.number(),
+  comment: z
+    .object({
+      rating: z.number(),
+      title: z.string(),
+      content: z.string(),
+      user: z
+        .object({
+          username: z.string(),
+          id: z.number().int(),
+        })
+        .optional(),
+    })
+    .array()
+    .optional(),
   region: z
     .object({
       id: z.number().int(),
       name: z.string(),
       countryId: z.number(),
+      country: z
+        .object({
+          code: z.string(),
+          id: z.number().int(),
+          name: z.string(),
+        })
+        .optional(),
     })
     .optional(),
 });
@@ -34,6 +55,9 @@ export default function useGetJourneys({
   offset,
   start,
   end,
+  min,
+  max,
+  withComments,
 }: {
   limit?: number;
   name?: string;
@@ -44,6 +68,7 @@ export default function useGetJourneys({
   offset?: number;
   max?: number;
   min?: number;
+  withComments?: boolean;
 }) {
   return useQuery({
     queryKey: [
@@ -52,6 +77,8 @@ export default function useGetJourneys({
       "offset" + offset,
       name,
       "region" + regionId,
+      "max" + max,
+      "min" + min,
     ],
     queryFn: async () => {
       const params = new URLSearchParams(
@@ -63,6 +90,9 @@ export default function useGetJourneys({
           offset,
           start,
           end,
+          withComments,
+          minPrice: min,
+          maxPrice: max,
         }),
       ).toString();
 

@@ -21,14 +21,13 @@ export default function AppendGettingHandlers(app: Express) {
         return;
       }
 
-      const l = Number(limit) ?? 10;
-      const n = String(name) ?? "";
+      const l = limit ? Number(limit) : 10;
+      const n = name ? String(name) : "";
 
-      const data = await db
-        .select()
-        .from(country)
-        .limit(l)
-        .where(like(country.name, "%" + n + "%"));
+      const data = await db.query.country.findMany({
+        limit: l,
+        where: like(country.name, "%" + n + "%"),
+      });
       res.json({ data });
       return;
     } catch (e) {
@@ -42,29 +41,25 @@ export default function AppendGettingHandlers(app: Express) {
     res.setHeader("Content-Type", "application/json");
     const { limit, name, countryId, id } = req.query;
 
-    const l = Number(limit) ?? 10;
-    const n = String(name);
-    const c = Number(countryId);
+    const l = limit ? Number(limit) : 10;
+    const n = name ? String(name) : undefined;
+    const c = countryId ? Number(countryId) : undefined;
 
     try {
       if (id) {
-        const data = await db
-          .select()
-          .from(region)
-          .where(eq(region.id, Number(id)));
+        const data = await db.query.region.findMany({
+          where: and(eq(region.id, Number(id))),
+        });
         res.json({ data });
         return;
       }
-      const data = await db
-        .select()
-        .from(region)
-        .limit(l)
-        .where(
-          and(
-            n ? like(region.name, "%" + n + "%") : undefined,
-            c ? eq(region.countryId, c) : undefined,
-          ),
-        );
+      const data = await db.query.region.findMany({
+        limit: l,
+        where: and(
+          n ? like(region.name, "%" + n + "%") : undefined,
+          c ? eq(region.countryId, c) : undefined,
+        ),
+      });
       res.json({ data });
       return;
     } catch (e) {
@@ -86,6 +81,7 @@ export default function AppendGettingHandlers(app: Express) {
       end,
       minPrice,
       maxPrice,
+      withComments,
     } = req.query;
 
     try {
@@ -93,7 +89,23 @@ export default function AppendGettingHandlers(app: Express) {
         const data = await db.query.journey.findMany({
           where: eq(journey.id, Number(id)),
           with: {
-            region: true,
+            region: {
+              with: {
+                country: true,
+              },
+            },
+            comment: Boolean(withComments)
+              ? {
+                  with: {
+                    user: {
+                      columns: {
+                        username: true,
+                        id: true,
+                      },
+                    },
+                  },
+                }
+              : undefined,
           },
         });
         res.json({ data });
@@ -121,7 +133,23 @@ export default function AppendGettingHandlers(app: Express) {
           min ? gt(journey.price, min) : undefined,
         ),
         with: {
-          region: true,
+          region: {
+            with: {
+              country: true,
+            },
+          },
+          comment: Boolean(withComments)
+            ? {
+                with: {
+                  user: {
+                    columns: {
+                      username: true,
+                      id: true,
+                    },
+                  },
+                },
+              }
+            : undefined,
         },
       });
 

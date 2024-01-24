@@ -26,7 +26,7 @@ export default function JourneyDisplay({
         <CardTitle>{name}</CardTitle>
         <CardDescription>{description}</CardDescription>
       </CardHeader>
-      <CardContent className="flex flex-wrap gap-x-10">
+      <CardContent className="flex flex-wrap justify-between gap-y-3">
         <div className="flex flex-col gap-y-10">
           {details ? <p>{details}</p> : null}
           <ul className="flex flex-col pl-6">
@@ -36,7 +36,11 @@ export default function JourneyDisplay({
             <li>booked: {booked}</li>
             <li>price: {price}$</li>
           </ul>
-          {region ? <p>{region.name}</p> : null}
+          {region ? (
+            <p>
+              {region?.name} | {region.country?.name}
+            </p>
+          ) : null}
         </div>
         {imageUrl ? (
           <img
